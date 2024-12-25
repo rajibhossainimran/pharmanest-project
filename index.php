@@ -7,7 +7,7 @@
      $background = './asstes/images/login-background.jpg';
     // include database and set connection 
     include_once "./config/config.php";
-    $db = mysqli_connect(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+    $db = mysqli_connect($localhost, $username, $password, $dbname);
     if(! $db){
         throw new Exception('Database connection failed: ' . mysqli_connect_error());
     }
@@ -30,7 +30,7 @@
     
                 // Store user data in session
                 $_SESSION['role'] = $role;
-                $_SESSION['id'] = $user['id']; // Assuming your table has an 'id' column
+                // $_SESSION['id'] = $user['id']; // Assuming your table has an 'id' column
     
                 // Redirect to dashboard
                 header("Location: dashboard.php");
@@ -50,6 +50,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/png" href="./asstes/images/Pharmanest (1).png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>

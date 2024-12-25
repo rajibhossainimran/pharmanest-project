@@ -1,4 +1,5 @@
-
+ 
+<?php include('check_user.php'); ?>
 <!-- header part  -->
  <?php  include("./pages/common_pages/header.php");?>
 

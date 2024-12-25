@@ -1,8 +1,18 @@
-<?php 
 
-define('DB_HOST','localhost');
-define('DB_USER','root');
-define('DB_PASSWORD','');
-define('DB_NAME','pharmanest_db');
+<?php 	
+
+$localhost = "localhost";
+$username = "root";
+$password = "";
+$dbname = "pharmanest_db";
+$store_url = "http://localhost/php-projects/pharmanest/";
+// db connection
+$connect = new mysqli($localhost, $username, $password, $dbname);
+// check connection
+if($connect->connect_error) {
+  die("Connection Failed : " . $connect->connect_error);
+} else {
+  // echo "Successfully connected";
+}
 
 ?>

@@ -1,3 +1,4 @@
+<?php include('check_user.php'); ?>
       <!-- header part start  -->
       <?php 
        include("./pages/common_pages/header.php");

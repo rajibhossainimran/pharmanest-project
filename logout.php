@@ -1,7 +1,7 @@
-<?php
+<?php 
 session_start();
-session_unset();
+require_once './config/config.php';
+unset($_SESSION["role"]);
 session_destroy();
-header('Location: index.php');
-exit();
+header('location:'.$store_url);
 ?>

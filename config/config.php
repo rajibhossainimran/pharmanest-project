@@ -7,10 +7,10 @@ $password = "";
 $dbname = "pharmanest_db";
 $store_url = "http://localhost/php-projects/pharmanest/";
 // db connection
-$connect = new mysqli($localhost, $username, $password, $dbname);
+$db = new mysqli($localhost, $username, $password, $dbname);
 // check connection
-if($connect->connect_error) {
-  die("Connection Failed : " . $connect->connect_error);
+if($db->connect_error) {
+  die("Connection Failed : " . $db->connect_error);
 } else {
   // echo "Successfully connected";
 }

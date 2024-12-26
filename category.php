@@ -133,7 +133,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                               <td>$category</td>
                               <td>$activeCategory</td>
                               <td>
-                                  <a href='#' 
+                                  <a href='./edit_category.php?id=$id'' 
                                   class='btn btn-primary btn-sm text-white me-2' 
                                   data-bs-toggle='tooltip' 
                                   title='Edit'>

@@ -1,5 +1,7 @@
  
 <?php include('check_user.php'); ?>
+<!-- database  -->
+ <?php require_once './config/config.php';?>
 <!-- header part  -->
  <?php  include("./pages/common_pages/header.php");?>
 
@@ -11,24 +13,21 @@
 
         
       <!-- main part start  -->
-    <main class="app-main">
+    <main  class="app-main">
         <!-- add category section part start  -->
     <div class="container mt-5">
-    <!-- Form Section -->
+
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <!-- display error message  -->
         <?php
-        // Display success or error messages
-
-        // Display success or error messages
         if (isset($_SESSION['success'])) {
-            echo "<p id='message' style='color: green;'>" . htmlspecialchars($_SESSION['success']) . "</p>";
+            echo "<p id='message' style='color: green;font-size: 25px;'>" . htmlspecialchars($_SESSION['success']) . "</p>";
             unset($_SESSION['success']); // Clear the message after displaying it
         }
         
         if (isset($_SESSION['error'])) {
-            echo "<p id='message' style='color: red;'>" . htmlspecialchars($_SESSION['error']) . "</p>";
+            echo "<p id='message' style='color: red;font-size: 25px;'>" . htmlspecialchars($_SESSION['error']) . "</p>";
             unset($_SESSION['error']); // Clear the message after displaying it
         }
         ?>
@@ -97,6 +96,70 @@
 
   <!-- display category list  -->
    <section>
+   <div class="container my-5">
+        <h2 class="mb-4 text-center">Category List</h2>
+        <table class="table table-striped table-bordered align-middle">
+            <thead style="background-color: teal; color: white;">
+                <tr>
+                    <th scope="col">SL</th>
+                    <th scope="col">Category Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            <?php
+                    $activeCategory='';
+                    $category_list = $db->query("SELECT * FROM category");
+                    if($category_list->num_rows > 0){
+                      $counter = 1;
+                      while (list($id,$category,$status) = $category_list->fetch_row()) {
+                        if($status == 1) {
+                          // activate member
+                          $activeCategory = "<span class='badge bg-success'>Active</span>";
+                        } else {
+                          // deactivate member
+                          $activeCategory = "<span class='badge bg-warning text-dark'>Inactive</span>";
+                        }
+    
+                              echo "<tr>
+                              <td>$counter</td>
+                              <td>$category</td>
+                              <td>$activeCategory</td>
+                              <td>
+                                  <a href='#' 
+                                  class='btn btn-primary btn-sm text-white me-2' 
+                                  data-bs-toggle='tooltip' 
+                                  title='Edit'>
+                                  <i class='bi bi-pencil-square'></i>
+                                  </a>
+              
+                                  <a href='#' class='btn btn-danger btn-sm text-white' data-bs-toggle='tooltip' 
+                                  title='Delete'>
+                                  <i class='bi bi-trash'></i>
+                                  </a>
+                              </td>
+                              
+                          </tr>";
+                          $counter++;
+                          
+                          
+                      }
+                    }else{
+                      echo "
+                      <p class='text-center text-muted bg-light py-3 rounded border'>
+                        <i class='bi bi-info-circle me-2'></i> No categories available at the moment.
+                      </p>
+                          ";
+                    }
+                    
+                
+            ?>
+              
+            </tbody>
+        </table>
+    </div>
     
    </section>
   </main>

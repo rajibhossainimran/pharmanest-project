@@ -104,7 +104,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
    <div class="container my-5">
         <h2 class="mb-4 text-center">Category List</h2>
         <table class="table table-striped table-bordered align-middle">
-            <thead style="background-color: teal; color: white;">
+            <thead class="table-success">
                 <tr>
                     <th scope="col">SL</th>
                     <th scope="col">Category Name</th>

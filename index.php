@@ -31,7 +31,7 @@
                 // Store user data in session
                 $_SESSION['role'] = $role;
                 // $_SESSION['id'] = $user['id']; // Assuming your table has an 'id' column
-    
+                
                 // Redirect to dashboard
                 header("Location: dashboard.php");
                 exit(); // Ensure no further code executes

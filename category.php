@@ -10,7 +10,12 @@
         <!--navber and sideber part start-->
  <?php include("./pages/common_pages/navber.php");?>
  <?php include("./pages/common_pages/sidebar.php");?>
+<?php 
+$message_delete = isset($_GET['message_delete']) ? $_GET['message_delete'] : null;
+$type = isset($_GET['type']) ? $_GET['type'] : null;
 
+
+?>
         
       <!-- main part start  -->
     <main  class="app-main">
@@ -135,7 +140,7 @@
                                   <i class='bi bi-pencil-square'></i>
                                   </a>
               
-                                  <a href='#' class='btn btn-danger btn-sm text-white' data-bs-toggle='tooltip' 
+                                  <a href='./php_action/category_delete.php?id=$id' class='btn btn-danger btn-sm text-white' data-bs-toggle='tooltip' 
                                   title='Delete'>
                                   <i class='bi bi-trash'></i>
                                   </a>
@@ -161,6 +166,36 @@
         </table>
     </div>
     
+    <!-- Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">
+                    <?php echo ($type === 'success') ? 'Success' : 'Error'; ?>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php echo htmlspecialchars($message_delete); ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Check if a message is set and display the modal
+    <?php if ($message_delete): ?>
+    var messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+    messageModal.show();
+    <?php endif; ?>
+</script>
+
    </section>
   </main>
      <!-- main part end -->

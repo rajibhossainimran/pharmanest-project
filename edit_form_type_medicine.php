@@ -12,7 +12,7 @@
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
 
-    $sql="SELECT * from unit where id=$id";
+    $sql="SELECT * from medicine_type where id=$id";
     $result=$db->query($sql)->fetch_assoc();
 
 }
@@ -27,21 +27,21 @@ if (isset($_GET['id'])) {
         <!-- display error message  -->
         <div class="card">
           <div class="card-header">
-            <h4>Edit Category</h4>
+            <h4>Edit Medicine Type</h4>
           </div>
           <div class="card-body">
             <div id="add-brand-messages"></div>
-            <form class="form-horizontal" method="POST" id="submitBrandForm" action="./php_action/edit_unit.php?update=<?php echo $id;?>" enctype="multipart/form-data">
+            <form class="form-horizontal" method="POST" id="submitBrandForm" action="./php_action/edit_type_medicine.php?update=<?php echo $id;?>" enctype="multipart/form-data">
               <!-- Categories Name -->
               <div class="form-group row">
-                <label class="col-sm-3 control-label" for="categoriesName">Unit Name</label>
+                <label class="col-sm-3 control-label" for="categoriesName">Type Name</label>
                 <div class="col-sm-9 mb-2">
                   <input 
                     type="text" 
                     class="form-control" 
-                    name="unit" 
-                    value="<?php echo $result['unit_name']?>"
-                    placeholder="unit Name" 
+                    name="type" 
+                    value="<?php echo $result['type_name']?>"
+                    placeholder="Type Name" 
                     required 
                     title="Only alphabets are allowed.">
                 </div>
@@ -52,12 +52,12 @@ if (isset($_GET['id'])) {
                 <label class="col-sm-3 control-label" for="categoriesStatus">Status</label>
                 <div class="col-sm-9">
                 <div class="col-sm-9">
-                    <select class="form-control" id="categoriesStatus" name="unitStatus">
+                    <select class="form-control" id="categoriesStatus" name="typeStatus">
                         <option value="1" <?php 
-                         if($result['unit_status']=="1") 
+                         if($result['type_status']=="1") 
                             { echo "selected";}?>>Available</option>
 
-                        <option value="2" <?php if($result['unit_status']=="2"){ echo "selected";}?>>Not Available</option>
+                        <option value="2" <?php if($result['type_status']=="2"){ echo "selected";}?>>Not Available</option>
                     </select>
                 </div>
               </div>

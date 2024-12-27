@@ -47,7 +47,7 @@
                                         <p>Unit</p>
                                     </a> </li>
                                    
-                                    <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                    <li class="nav-item"> <a href="type_medicine.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Type</p>
                                     </a> </li>
                                 

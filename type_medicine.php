@@ -101,7 +101,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
   <!-- display category list  -->
    <section>
    <div class="container my-5">
-        <h2 class="mb-4 text-center">Unit List</h2>
+        <h2 class="mb-4 text-center">Medicine Type List</h2>
         <table class="table table-striped table-bordered align-middle">
             <thead class="table-success">
                 <tr>

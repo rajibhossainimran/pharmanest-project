@@ -20,18 +20,18 @@
       <main  class="app-main">
       <div class="form-container p-5">
     <h3>Add Supplier</h3>
-    <form>
+    <form method="POST" id="submitBrandForm" action="./php_action/create_add_supplier.php" enctype="multipart/form-data">
       <div class="row">
         <!-- Supplier Name -->
         <div class="col-md-6 mb-3">
           <label for="supplierName" class="form-label">Supplier Name</label>
-          <input type="text" class="form-control" id="supplierName" required>
+          <input type="text" name="supplier_name" class="form-control" id="supplierName" required>
         </div>
 
         <!-- Company -->
         <div class="col-md-6 mb-3">
           <label for="company" class="form-label">Company</label>
-          <input type="text" class="form-control" id="company" required>
+          <input type="text" name="company" class="form-control" id="company" required>
         </div>
       </div>
 
@@ -39,13 +39,13 @@
         <!-- Mobile Number -->
         <div class="col-md-6 mb-3">
           <label for="mobileNumber" class="form-label">Mobile Number</label>
-          <input type="tel" class="form-control" id="mobileNumber" required>
+          <input type="tel" name="mobile" class="form-control" id="mobileNumber" required>
         </div>
 
         <!-- Email -->
         <div class="col-md-6 mb-3">
           <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" required>
+          <input type="email" name="email" class="form-control" id="email" required>
         </div>
       </div>
 
@@ -53,7 +53,7 @@
         <!-- Supplier Address -->
         <div class="col-md-12 mb-3">
           <label for="address" class="form-label">Supplier Address</label>
-          <textarea class="form-control" id="address" rows="3" required></textarea>
+          <textarea class="form-control" name="address" id="address" rows="3" required></textarea>
         </div>
       </div>
 
@@ -61,19 +61,34 @@
         <!-- City -->
         <div class="col-md-6 mb-3">
           <label for="city" class="form-label">City</label>
-          <input type="text" class="form-control" id="city" required>
+          <input type="text" name="city" class="form-control" id="city" required>
         </div>
 
         <!-- State -->
         <div class="col-md-6 mb-3">
           <label for="state" class="form-label">State</label>
-          <input type="text" class="form-control" id="state" required>
+          <input type="text" name="state" class="form-control" id="state" required>
+        </div>
+      </div>
+      <div class="row">
+       <div class="col-md-6 mb-3">
+       <div class="form-group row">
+                <label class="col-sm-3 control-label" for="categoriesStatus">Status</label>
+                <div class="col-sm-9">
+                  <select class="form-control" id="supplierStatus" name="supplierStatus" required>
+                    <option value="">-SELECT-</option>
+                    <option value="1">Available</option>
+                    <option value="2">Not Available</option>
+                  </select>
+                </div>
+              </div>
+
         </div>
       </div>
 
       <!-- Submit Button -->
       <div class="text-center">
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-success" name="create">Submit</button>
       </div>
     </form>
 </div>

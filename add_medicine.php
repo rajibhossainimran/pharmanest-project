@@ -15,13 +15,13 @@
             <div class="row mb-4">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="medicineName" class="form-label">Medicine Name</label>
+                        <label for="medicineName" class="form-label">Medicine Name:</label>
                         <input type="text" class="form-control" id="medicineName" name="medicine_name" required>
                     </div>
                 </div>
                 <div class="col-md-6">
                 <div class="mb-3">
-                        <label for="shelfNo" class="form-label">Shelf No</label>
+                        <label for="shelfNo" class="form-label">Shelf No:</label>
                         <input type="text" class="form-control" id="shelfNo" name="shelf_no" required>
                     </div>
                 </div>
@@ -30,13 +30,13 @@
             <div class="row mb-4">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="manufacturer" class="form-label">Manufacturer</label>
+                        <label for="manufacturer" class="form-label">Manufacturer:</label>
                         <input type="text" class="form-control" id="manufacturer" name="manufacturer" required>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="medicineType" class="form-label">Medicine Type</label>
+                        <label for="medicineType" class="form-label">Medicine Type:</label>
                         <input type="text" class="form-control" id="medicineType" name="medicine_type" required>
                     </div>
                 </div>
@@ -45,13 +45,13 @@
             <div class="row mb-4">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="genericName" class="form-label">Generic Name</label>
+                        <label for="genericName" class="form-label">Generic Name:</label>
                         <input type="text" class="form-control" id="genericName" name="generic_name" required>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="supplierName" class="form-label">Supplier Name</label>
+                        <label for="supplierName" class="form-label">Supplier Name:</label>
                         <input type="text" class="form-control" id="supplierName" name="supplier_name" required>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
             <div class="row mb-4">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="medicineStatus" class="form-label">Medicine Status</label>
+                        <label for="medicineStatus" class="form-label">Medicine Status:</label>
                         <select class="form-control" id="medicineStatus" name="medicine_status">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
@@ -71,7 +71,7 @@
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="medicineImage" class="form-label">Upload Image</label>
+                            <label for="medicineImage" class="form-label">Upload Image:</label>
                             <input type="file" class="form-control" id="medicineImage" name="medicine_image" accept="image/*" required>
                         </div>
                     </div>

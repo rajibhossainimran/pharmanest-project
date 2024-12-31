@@ -36,7 +36,7 @@
                             <li class="nav-item"> <a href="add_medicine.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Add New Medicine</p>
                                     </a> </li>
-                                    <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                    <li class="nav-item"> <a href="#" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Medicine List</p>
                                     </a> </li>
                                 <li class="nav-item"> <a href="category.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>

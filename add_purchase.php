@@ -27,13 +27,13 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="supplierName" class="form-label">Supplier Name</label>
+                    <label for="supplierName" class="form-label">Supplier Name:</label>
                     <input type="text" class="form-control" id="supplierName" required>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="invoice" class="form-label">Invoice Number</label>
+                    <label for="invoice" class="form-label">Invoice Number:</label>
                     <input type="text" class="form-control" id="randomNumber" readonly>
                 </div>
             </div>
@@ -42,13 +42,13 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="company" class="form-label">Company Name</label>
+                    <label for="company" class="form-label">Company Name:</label>
                     <input type="text" class="form-control" id="company" required>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="purchaseDate" class="form-label">Purchase Date</label>
+                    <label for="purchaseDate" class="form-label">Purchase Date:</label>
                     <input type="date" class="form-control" id="purchaseDate" required value="<?php echo date('Y-m-d'); ?>">
                 </div>
             </div>
@@ -82,27 +82,27 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
             <div class="col-md-6"></div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="subAmount" class="form-label">Sub Amount</label>
+                    <label for="subAmount" class="form-label">Sub Amount:</label>
                     <input type="number" class="form-control" id="subAmount" required>
                 </div>
                 <div class="mb-3">
-                    <label for="discount" class="form-label">Discount</label>
+                    <label for="discount" class="form-label">Discount:</label>
                     <input type="number" class="form-control" id="discount" required>
                 </div>
                 <div class="mb-3">
-                    <label for="payableAmount" class="form-label">Payable Amount</label>
+                    <label for="payableAmount" class="form-label">Payable Amount:</label>
                     <input type="number" class="form-control" id="payableAmount" required>
                 </div>
                 <div class="mb-3">
-                    <label for="receivedAmount" class="form-label">Received Amount</label>
+                    <label for="receivedAmount" class="form-label">Received Amount:</label>
                     <input type="number" class="form-control" id="receivedAmount" required>
                 </div>
                 <div class="mb-3">
-                    <label for="dueAmount" class="form-label">Due Amount</label>
+                    <label for="dueAmount" class="form-label">Due Amount:</label>
                     <input type="number" class="form-control" id="dueAmount" required>
                 </div>
                 <div class="mb-3">
-                    <label for="paymentStatus" class="form-label">Payment Status</label>
+                    <label for="paymentStatus" class="form-label">Payment Status:</label>
                     <select class="form-control" id="paymentStatus">
                         <option value="0">Paid</option>
                         <option value="1">Unpaid</option>

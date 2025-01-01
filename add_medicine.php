@@ -17,6 +17,8 @@
                     <div class="mb-3">
                         <label for="medicineName" class="form-label">Medicine Name:</label>
                         <input type="text" class="form-control" id="medicineName" name="medicine_name" required>
+                        <!-- medicine name suggestion box -->
+                        <div id="autocompleteList" class="autocomplete-list"></div>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -37,7 +39,16 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="medicineType" class="form-label">Medicine Type:</label>
-                        <input type="text" class="form-control" id="medicineType" name="medicine_type" required>
+                        <select class="form-control" id="medicineType" name="medicine_status">
+                        <option value="">--Select medicine type--</option>
+                        <?php
+                        
+                            $manufaclist = $db->query("SELECT * FROM medicine_type");
+                            while (list($_bid, $_bname, $_baddress, $_bcontact) = $manufaclist->fetch_row()) {
+                                echo "<option value='$_bid'>$_bname</option>";
+                            }
+                        ?>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -52,7 +63,16 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="supplierName" class="form-label">Supplier Name:</label>
-                        <input type="text" class="form-control" id="supplierName" name="supplier_name" required>
+                        <select class="form-control" id="medicineSupplier" name="medicine_supplier">
+                        <option value="">--Select supplier--</option>
+                        <?php
+                        
+                            $manufaclist = $db->query("SELECT * FROM supplier_add");
+                            while (list($_bid, $_bname, $_baddress, $_bcontact) = $manufaclist->fetch_row()) {
+                                echo "<option value='$_bid'>$_bname</option>";
+                            }
+                        ?>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -118,4 +138,52 @@
         }
     });
 </script>
+
+<!-- company or manufacturer name suggestion code js  -->
+<script>
+    let medicines = [];
+
+    // Fetch JSON data
+    fetch("json_data/another.json")
+      .then(response => response.json())
+      .then(data => {
+        medicines = data; // Load the medicines data
+      })
+      .catch(error => console.error("Error loading JSON:", error));
+
+    const brandInput = document.getElementById("medicineName");
+    const genericInput = document.getElementById("genericName");
+    const manufacturerInput = document.getElementById("manufacturer");
+    const autocompleteList = document.getElementById("autocompleteList");
+
+    brandInput.addEventListener("input", function () {
+      const query = brandInput.value.toLowerCase();
+      autocompleteList.innerHTML = "";
+
+      if (query) {
+        const filteredMedicines = medicines.filter(medicine =>
+          medicine.brand.toLowerCase().includes(query)
+        );
+
+        filteredMedicines.forEach(medicine => {
+          const item = document.createElement("div");
+          item.textContent = medicine.brand;
+          item.addEventListener("click", function () {
+            // Update input fields with selected data
+            brandInput.value = medicine.brand;
+            genericInput.value = medicine.generic;
+            manufacturerInput.value = medicine.manufacturer;
+            autocompleteList.innerHTML = "";
+          });
+          autocompleteList.appendChild(item);
+        });
+      }
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!autocompleteList.contains(e.target) && e.target !== brandInput) {
+        autocompleteList.innerHTML = "";
+      }
+    });
+  </script>
 <?php include("./pages/common_pages/footer.php"); ?>

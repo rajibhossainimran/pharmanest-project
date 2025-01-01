@@ -115,6 +115,7 @@
         </form>
     </div>
 </main>
+<!-- image display in side box code  -->
 <script>
     const medicineImage = document.getElementById('medicineImage');
     const imagePreview = document.getElementById('imagePreview');

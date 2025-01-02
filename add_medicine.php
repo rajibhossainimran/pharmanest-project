@@ -7,9 +7,12 @@
 <!--navber and sideber part start-->
 <?php include("./pages/common_pages/navber.php"); ?>
 <?php include("./pages/common_pages/sidebar.php"); ?>
+
+
 <?php 
 
 if(isset($_POST['addMbtn'])){
+    // Data from the form
     $medicine_name = $_POST['medicine_name'];
     $shelf_no = $_POST['shelf_no'];
     $manufacturer = $_POST['manufacturer'];
@@ -18,16 +21,23 @@ if(isset($_POST['addMbtn'])){
     $medicine_supplier = $_POST['medicine_supplier'];
     $medicine_status = $_POST['medicine_status'];
     $medicine_image = $_FILES['medicine_image']['name'];
-    $medicine_image_tmp = $_FILES['medicine_image']['tmp_name'];
-    move_uploaded_file($medicine_image_tmp, "images/$medicine_image");
 
-    $sql = "INSERT INTO medicine_add (medicine_name, shelf_no, manufacturer, medicine_type, generic_name, medicine_supplier, medicine_status, medicine_image) VALUES ('$medicine_name', '$shelf_no', '$manufacturer', '$medicine_type', '$generic_name', '$medicine_supplier', '$medicine_status', '$medicine_image')";
-    $result = $db->query($sql);
-    if($result){
+    // Uploading the image
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($medicine_image);
+    move_uploaded_file($_FILES["medicine_image"]["tmp_name"], $target_file);
+
+    // Insert data
+    $sql = "INSERT INTO medicines (m_name, shelf_no, manufacturer, m_type, genetic, supplier, status, medicine_image) 
+            VALUES ('$medicine_name', '$shelf_no', '$manufacturer', '$medicine_type', '$generic_name', '$medicine_supplier', '$medicine_status', '$target_file')";
+
+    if ($db->query($sql) === TRUE) {
         echo "<script>alert('Medicine added successfully')</script>";
-    }else{
+    } else {
         echo "<script>alert('Medicine added failed')</script>";
     }
+
+    $db->close();
 }
 
 ?>
@@ -35,7 +45,7 @@ if(isset($_POST['addMbtn'])){
 <main class="app-main">
     <div class="container mt-2 mb-5">
         <h2>Add Medicine</h2>
-        <form action="process_add_medicine.php" method="POST" enctype="multipart/form-data">
+        <form action="" method="POST" enctype="multipart/form-data">
             <div class="row mb-4">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -63,13 +73,13 @@ if(isset($_POST['addMbtn'])){
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="medicineType" class="form-label">Medicine Type:</label>
-                        <select class="form-control" id="medicineType" name="medicine_status">
+                        <select class="form-control" id="medicineType" name="medicine_type">
                         <option value="">--Select medicine type--</option>
                         <?php
                         
                             $manufaclist = $db->query("SELECT * FROM medicine_type");
-                            while (list($_bid, $_bname, $_baddress, $_bcontact) = $manufaclist->fetch_row()) {
-                                echo "<option value='$_bid'>$_bname</option>";
+                            while (list($_bid, $_bname) = $manufaclist->fetch_row()) {
+                                echo "<option value='$_bname'>$_bname</option>";
                             }
                         ?>
                         </select>
@@ -91,9 +101,9 @@ if(isset($_POST['addMbtn'])){
                         <option value="">--Select supplier--</option>
                         <?php
                         
-                            $manufaclist = $db->query("SELECT * FROM supplier_add");
-                            while (list($_bid, $_bname, $_baddress, $_bcontact) = $manufaclist->fetch_row()) {
-                                echo "<option value='$_bid'>$_bname</option>";
+                            $supplierclist = $db->query("SELECT * FROM supplier_add");
+                            while (list($_sid, $_sname) = $supplierclist->fetch_row()) {
+                                echo "<option value='$_sname'>$_sname</option>";
                             }
                         ?>
                         </select>
@@ -105,9 +115,10 @@ if(isset($_POST['addMbtn'])){
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="medicineStatus" class="form-label">Medicine Status:</label>
-                        <select class="form-control" id="medicineStatus" name="medicine_status">
-                            <option value="available">Available</option>
-                            <option value="unavailable">Unavailable</option>
+                        <select class="form-control" id="medicineStatus" name="medicine_status" required>
+                            <option value="">-SELECT-</option>
+                            <option value="1">Available</option>
+                            <option value="2">Not Available</option>
                         </select>
                     </div>
                 </div>
@@ -116,7 +127,7 @@ if(isset($_POST['addMbtn'])){
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="medicineImage" class="form-label">Upload Image:</label>
-                            <input type="file" class="form-control" id="medicineImage" name="medicine_image" accept="image/*" required>
+                            <input type="file" class="form-control" id="medicineImage" name="medicine_image" accept="uploads/*" required>
                         </div>
                     </div>
                     <div class="col-md-6">

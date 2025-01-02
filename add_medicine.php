@@ -7,6 +7,30 @@
 <!--navber and sideber part start-->
 <?php include("./pages/common_pages/navber.php"); ?>
 <?php include("./pages/common_pages/sidebar.php"); ?>
+<?php 
+
+if(isset($_POST['addMbtn'])){
+    $medicine_name = $_POST['medicine_name'];
+    $shelf_no = $_POST['shelf_no'];
+    $manufacturer = $_POST['manufacturer'];
+    $medicine_type = $_POST['medicine_type'];
+    $generic_name = $_POST['generic_name'];
+    $medicine_supplier = $_POST['medicine_supplier'];
+    $medicine_status = $_POST['medicine_status'];
+    $medicine_image = $_FILES['medicine_image']['name'];
+    $medicine_image_tmp = $_FILES['medicine_image']['tmp_name'];
+    move_uploaded_file($medicine_image_tmp, "images/$medicine_image");
+
+    $sql = "INSERT INTO medicine_add (medicine_name, shelf_no, manufacturer, medicine_type, generic_name, medicine_supplier, medicine_status, medicine_image) VALUES ('$medicine_name', '$shelf_no', '$manufacturer', '$medicine_type', '$generic_name', '$medicine_supplier', '$medicine_status', '$medicine_image')";
+    $result = $db->query($sql);
+    if($result){
+        echo "<script>alert('Medicine added successfully')</script>";
+    }else{
+        echo "<script>alert('Medicine added failed')</script>";
+    }
+}
+
+?>
 
 <main class="app-main">
     <div class="container mt-2 mb-5">
@@ -108,7 +132,7 @@
             <div class="row">
                 <div class="col-4"></div>
                 <div class="col-4 text-center">
-                    <button type="submit" class="btn btn-success">Add Medicine</button>
+                    <button type="submit" class="btn btn-success" name="addMbtn">Add Medicine</button>
                 </div>
                 <div class="col-4"></div>
             </div>

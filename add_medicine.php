@@ -169,7 +169,7 @@ if(isset($_POST['addMbtn'])){
     let medicines = [];
 
     // Fetch JSON data
-    fetch("json_data/another.json")
+    fetch("json_data/medicine_name.json")
       .then(response => response.json())
       .then(data => {
         medicines = data; // Load the medicines data

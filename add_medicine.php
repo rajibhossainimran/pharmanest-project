@@ -32,9 +32,13 @@ if(isset($_POST['addMbtn'])){
             VALUES ('$medicine_name', '$shelf_no', '$manufacturer', '$medicine_type', '$generic_name', '$medicine_supplier', '$medicine_status', '$target_file')";
 
     if ($db->query($sql) === TRUE) {
-        echo "<script>alert('Medicine added successfully')</script>";
+        echo "sUCCESSFULL ADDED";
+        header('Location: ' . $_SERVER['PHP_SELF']);
+
     } else {
-        echo "<script>alert('Medicine added failed')</script>";
+        echo "DOES NOT ADDED";
+        header('Location: ' . $_SERVER['PHP_SELF']);
+
     }
 
     $db->close();

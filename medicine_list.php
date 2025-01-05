@@ -36,22 +36,64 @@ $result = $db->query($sql);
             <?php
             $count = 0;
             if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
+                while (list($id,$m_name,$shelf,$company,$m_type,$genetic,$supplier,$status,$img) = $supplier_list->fetch_row()) {
+                    if($status == 1) {
+                        // activate member
+                        $active_medicine = "<span class='badge bg-success'>Active</span>";
+                      } else {
+                        // deactivate member
+                        $active_medicine = "<span class='badge bg-warning text-dark'>Inactive</span>";
+                      }
                     $count++;
                     echo "<tr>
                         <td>$count</td>
-                        <td>{$row['m_name']}</td>
-                        <td><img src='{$row['medicine_image']}' alt='Medicine Image' class='img-thumbnail' style='max-width: 100px;'></td>
-                        <td>{$row['manufacturer']}</td>
-                        <td>{$row['m_type']}</td>
-                        <td>{$row['supplier']}</td>
-                        <td>{$row['status']}</td>
+                        <td>$m_name</td>
+                        <td><img src='$img' alt='Medicine Image' class='img-thumbnail' style='max-width: 100px;'></td>
+                        <td>$company</td>
+                        <td>$m_type</td>
+                        <td>$supplier</td>
+                        <td>$active_medicine</td>
                                                 
                     </tr>";
                 }
             } else {
                 echo "<tr><td colspan='7' class='text-center'>No data found</td></tr>";
             }
+                  $active_medicine='';
+                    $supplier_list = $db->query("SELECT * FROM medicines");
+                    if($supplier_list->num_rows > 0){
+                      $counter = 1;
+                      while (list($id,$m_name,$shelf,$company,$m_type,$genetic,$supplier,$status,$img) = $supplier_list->fetch_row())  {
+                        if($status == 1) {
+                            // activate member
+                            $active_medicine = "<span class='badge bg-success'>Active</span>";
+                          } else {
+                            // deactivate member
+                            $active_medicine = "<span class='badge bg-warning text-dark'>Inactive</span>";
+                          }
+                        $count++;
+                        echo "<tr>
+                            <td>$counter</td>
+                            <td>$m_name</td>
+                            <td><img src='$img' alt='Medicine Image' class='img-thumbnail' style='max-width: 100px;'></td>
+                            <td>$company</td>
+                            <td>$m_type</td>
+                            <td>$supplier</td>
+                            <td>$active_medicine</td>
+                                                    
+                        </tr>";
+                          $counter++;
+                          
+                          
+                      }
+                    }else{
+                      echo "
+                      <p class='text-center text-muted bg-light py-3 rounded border'>
+                        <i class='bi bi-info-circle me-2'></i> No categories available at the moment.
+                      </p>
+                          ";
+                    }
+                    
             ?>
         </tbody>
     </table>

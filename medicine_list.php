@@ -25,6 +25,7 @@ $result = $db->query($sql);
                 <th>SL</th>
                 <th>Medicine Name</th>
                 <th>Image</th>
+                <th>Shelf</th>
                 <th>Company</th>
                 <th>Type</th>
                 <th>Supplier</th>
@@ -50,12 +51,13 @@ $result = $db->query($sql);
                             <td>$counter</td>
                             <td>$m_name</td>
                             <td><img src='$img' alt='Medicine Image' class='img-thumbnail' style='max-width: 100px;'></td>
+                            <td>$shelf</td>
                             <td>$company</td>
                             <td>$m_type</td>
                             <td>$supplier</td>
                             <td>$active_medicine</td>
                             <td>
-                                  <a href='./edito_form_supplier.php?id=$id'' 
+                                  <a href='./edit_form_medicine.php?id=$id'' 
                                   class='btn btn-primary btn-sm text-white me-2' 
                                   data-bs-toggle='tooltip' 
                                   title='Edit'>

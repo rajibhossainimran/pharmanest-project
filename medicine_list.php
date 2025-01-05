@@ -20,7 +20,7 @@ $result = $db->query($sql);
     <div class="container mt-2 mb-5">
     <h1>Medicine List</h1>
     <table class="table table-bordered table-hover table-striped">
-        <thead class="table-dark">
+        <thead class="table-success">
             <tr>
                 <th>SL</th>
                 <th>Medicine Name</th>
@@ -34,31 +34,6 @@ $result = $db->query($sql);
         </thead>
         <tbody>
             <?php
-            $count = 0;
-            if ($result->num_rows > 0) {
-                while (list($id,$m_name,$shelf,$company,$m_type,$genetic,$supplier,$status,$img) = $supplier_list->fetch_row()) {
-                    if($status == 1) {
-                        // activate member
-                        $active_medicine = "<span class='badge bg-success'>Active</span>";
-                      } else {
-                        // deactivate member
-                        $active_medicine = "<span class='badge bg-warning text-dark'>Inactive</span>";
-                      }
-                    $count++;
-                    echo "<tr>
-                        <td>$count</td>
-                        <td>$m_name</td>
-                        <td><img src='$img' alt='Medicine Image' class='img-thumbnail' style='max-width: 100px;'></td>
-                        <td>$company</td>
-                        <td>$m_type</td>
-                        <td>$supplier</td>
-                        <td>$active_medicine</td>
-                                                
-                    </tr>";
-                }
-            } else {
-                echo "<tr><td colspan='7' class='text-center'>No data found</td></tr>";
-            }
                   $active_medicine='';
                     $supplier_list = $db->query("SELECT * FROM medicines");
                     if($supplier_list->num_rows > 0){
@@ -71,7 +46,6 @@ $result = $db->query($sql);
                             // deactivate member
                             $active_medicine = "<span class='badge bg-warning text-dark'>Inactive</span>";
                           }
-                        $count++;
                         echo "<tr>
                             <td>$counter</td>
                             <td>$m_name</td>
@@ -80,6 +54,19 @@ $result = $db->query($sql);
                             <td>$m_type</td>
                             <td>$supplier</td>
                             <td>$active_medicine</td>
+                            <td>
+                                  <a href='./edito_form_supplier.php?id=$id'' 
+                                  class='btn btn-primary btn-sm text-white me-2' 
+                                  data-bs-toggle='tooltip' 
+                                  title='Edit'>
+                                  <i class='bi bi-pencil-square'></i>
+                                  </a>
+              
+                                  <a href='./php_action/delete_medicine.php?id=$id' class='btn btn-danger btn-sm text-white' data-bs-toggle='tooltip' 
+                                  title='Delete'>
+                                  <i class='bi bi-trash'></i>
+                                  </a>
+                              </td>
                                                     
                         </tr>";
                           $counter++;

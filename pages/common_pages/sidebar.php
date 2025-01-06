@@ -8,7 +8,6 @@
                                     Dashboard
                                 </p>
                             </a>
-                           
                         </li>
                         <li class="nav-item"> <a href="#" class="nav-link"> <i class="bi bi-receipt-cutoff fs-4"></i>
                                 <p>
@@ -22,8 +21,7 @@
                                     </a> </li>
                                 <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Sell List</p>
-                                    </a> </li>
-                                
+                                    </a> </li>                               
                             </ul>
                         </li>
                         <li class="nav-item"> <a href="#" class="nav-link"> <i class="bi bi-capsule-pill fs-4"></i>
@@ -42,15 +40,12 @@
                                 <li class="nav-item"> <a href="category.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Category</p>
                                     </a> </li>
-                
                                     <li class="nav-item"> <a href="unit.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Unit</p>
                                     </a> </li>
-                                   
                                     <li class="nav-item"> <a href="type_medicine.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Type</p>
                                     </a> </li>
-                                
                             </ul>
                         </li>
                         <li class="nav-item"> <a href="#" class="nav-link"> <i class="bi bi-cart4 fs-4"></i>
@@ -66,10 +61,8 @@
                                 <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Purchase List</p>
                                     </a> </li>
-                                
                             </ul>
                         </li>
-                        
                         <li class="nav-item"> <a href="#" class="nav-link"><i class="bi bi-person-lines-fill fs-4"></i>
                                 <p>
                                    Supplier
@@ -85,8 +78,7 @@
                                     </a> </li>
                              <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Supplier Ledger</p>
-                                    </a> </li>
-                                
+                                    </a> </li> 
                             </ul>
                         </li>
                         <li class="nav-item"> <a href="#" class="nav-link"> <i class="bi bi-receipt-cutoff fs-4"></i>
@@ -102,7 +94,6 @@
                                 <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Invoice List</p>
                                     </a> </li>
-                                
                             </ul>
                         </li>
                         <li class="nav-item"> <a href="#" class="nav-link"> <i class="bi bi-backpack4-fill fs-4"></i>
@@ -121,10 +112,8 @@
                                 <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                     <p>Wastage Return List</p>
                                     </a> </li>
-                                
                             </ul>
                         </li>
-
                         <li class="nav-item"> <a href="#" class="nav-link"> <i class="bi bi-shop fs-4"></i>
                                 <p>
                                    Stock
@@ -141,7 +130,6 @@
                                 <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                     <p>Available Stock</p>
                                     </a> </li>
-                                
                             </ul>
                         </li>
                         <li class="nav-item"> <a href="#" class="nav-link"><i class="bi bi-people-fill fs-4"></i>
@@ -157,11 +145,8 @@
                                 <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Customer List</p>
                                     </a> </li>
-                              
-                                
                             </ul>
                         </li>
-
                         <li class="nav-item"> <a href="#" class="nav-link"><i class="bi bi-book fs-4"></i>
                                 <p>
                                    Report
@@ -183,8 +168,7 @@
                                     </a> </li> 
                                     <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Purchase Report</p>
-                                    </a> </li>      
-                                
+                                    </a> </li> 
                             </ul>
                         </li>
                         <li class="nav-item"> <a href="#" class="nav-link"><i class="bi bi-person-workspace fs-4"></i>

@@ -126,27 +126,6 @@ if (isset($_GET['id'])) {
                     </select>
                     </div>
                 </div>
-                <div class="col-md-6">
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="medicineImage" class="form-label">Upload Image:</label>
-                            <input type="file" class="form-control" id="medicineImage" name="medicine_image" accept="uploads/*" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-center border rounded p-3" style="min-height: 200px;">
-                            <p class="text-muted" id="previewText">select image</p>
-                            <img 
-                            id="imagePreview" 
-                            src="<?php echo $result['medicine_image']; ?>" 
-                            alt="Preview" 
-                            class="img-fluid <?php echo empty($result['medicine_image']) ? 'd-none' : ''; ?>" 
-                            style="max-height: 200px;">
-                        </div>
-                    </div>
-                </div>
-                  </div>
             </div>
 
             <div class="row">

@@ -3,22 +3,25 @@
 <?php require_once './config/config.php'; ?>
 <!-- header part  -->
 <?php include("./pages/common_pages/header.php"); ?>
-
 <!--navber and sideber part start-->
 <?php include("./pages/common_pages/navber.php"); ?>
 <?php include("./pages/common_pages/sidebar.php"); ?>
 
 <?php
-
-
 // Query to fetch data
 $sql = "SELECT * FROM medicines";
 $result = $db->query($sql);
-
 ?>
 <main class="app-main">
-    <div class="container mt-2 mb-5">
-    <h1>Medicine List</h1>
+    <div class="container mt-2 mb-5 py-5">
+    <div class="d-flex justify-content-between">
+        <h2 class="">Medicine List</h2>
+            <div>
+            <a href="add_medicine.php" class="btn btn-success d-block my-2" role="button">
+        Add Medicine
+        </a>
+            </div>
+        </div>
     <table class="table table-bordered table-hover table-striped">
         <thead class="table-success">
             <tr>
@@ -88,8 +91,6 @@ $result = $db->query($sql);
     </table>
     </div>
 </main>
-
-
 <?php include("./pages/common_pages/footer.php"); ?>
 <?php
 $db->close();

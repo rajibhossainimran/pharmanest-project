@@ -36,7 +36,14 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
   <!-- display category list  -->
    <section>
    <div class="container my-5">
-        <h2 class="mb-4 text-center">Supplier List</h2>
+        <div class="d-flex justify-content-between">
+        <h2 class="">Supplier List</h2>
+            <div>
+            <a href="add_supplier.php" class="btn btn-success d-block my-2" role="button">
+        Add Supplier
+        </a>
+            </div>
+        </div>
         <table class="table table-striped table-bordered align-middle">
             <thead class="table-success">
                 <tr>

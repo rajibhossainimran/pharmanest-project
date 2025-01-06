@@ -3,53 +3,20 @@
 <?php require_once './config/config.php'; ?>
 <!-- header part  -->
 <?php include("./pages/common_pages/header.php"); ?>
-
 <!--navber and sideber part start-->
 <?php include("./pages/common_pages/navber.php"); ?>
 <?php include("./pages/common_pages/sidebar.php"); ?>
-
-
-<?php 
-
-if(isset($_POST['addMbtn'])){
-    // Data from the form
-    $medicine_name = $_POST['medicine_name'];
-    $shelf_no = $_POST['shelf_no'];
-    $manufacturer = $_POST['manufacturer'];
-    $medicine_type = $_POST['medicine_type'];
-    $generic_name = $_POST['generic_name'];
-    $medicine_supplier = $_POST['medicine_supplier'];
-    $medicine_status = $_POST['medicine_status'];
-    $medicine_image = $_FILES['medicine_image']['name'];
-
-    // Uploading the image
-    $target_dir = "uploads/";
-    $target_file = $target_dir . basename($medicine_image);
-    move_uploaded_file($_FILES["medicine_image"]["tmp_name"], $target_file);
-
-    // Insert data
-    $sql = "INSERT INTO medicines (m_name, shelf_no, manufacturer, m_type, genetic, supplier, status, medicine_image) 
-            VALUES ('$medicine_name', '$shelf_no', '$manufacturer', '$medicine_type', '$generic_name', '$medicine_supplier', '$medicine_status', '$target_file')";
-
-    if ($db->query($sql) === TRUE) {
-        echo "sUCCESSFULL ADDED";
-        header('Location: ' . $_SERVER['PHP_SELF']);
-
-    } else {
-        echo "DOES NOT ADDED";
-        header('Location: ' . $_SERVER['PHP_SELF']);
-
-    }
-
-    $db->close();
-}
-
-?>
-
 <main class="app-main">
-    <div class="container mt-2 mb-5">
-        <h2>Add Medicine</h2>
-        <form action="" method="POST" enctype="multipart/form-data">
+    <div class="container mt-2 mb-5 py-4">
+        <div class="d-flex justify-content-between">
+        <h2 class="">Add Medicine</h2>
+            <div>
+            <a href="medicine_list.php" class="btn btn-success d-block my-2" role="button">
+        Show Medicine List
+        </a>
+            </div>
+        </div>
+        <form action="./php_action/create_medicine.php" method="POST" enctype="multipart/form-data">
             <div class="row mb-4">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -81,8 +48,8 @@ if(isset($_POST['addMbtn'])){
                         <option value="">--Select medicine type--</option>
                         <?php
                         
-                            $manufaclist = $db->query("SELECT * FROM medicine_type");
-                            while (list($_bid, $_bname) = $manufaclist->fetch_row()) {
+                            $medicineType = $db->query("SELECT * FROM medicine_type");
+                            while (list($_bid, $_bname) = $medicineType->fetch_row()) {
                                 echo "<option value='$_bname'>$_bname</option>";
                             }
                         ?>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en"> <!--begin::Head-->
-
 <head>
 <link rel="icon" type="image/png" href="./asstes/images/Pharmanest (1).png">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">

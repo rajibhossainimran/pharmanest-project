@@ -12,10 +12,8 @@ if(isset($_POST['update'])){
     $genetic = $_POST['generic_name'];
     $supulier = $_POST['medicine_supplier'];
     $status = $_POST['medicine_status'];
-    $image = $_POST['medicine_image'];
 
-    $sql = "UPDATE medicines SET m_name = '$medicine_name', shelf_no = '$shelf', manufacturer = '$manufacturer', m_type = '$m_type', genetic = '$genetic', supplier = '$supulier', status = '$status', medicine_image = '$image' WHERE id = $id
-";
+    $sql = "UPDATE medicines SET m_name = '$medicine_name', shelf_no = '$shelf', manufacturer = '$manufacturer', m_type = '$m_type', genetic = '$genetic', supplier = '$supulier', status = '$status' WHERE id = $id ";
 
     if($db->query($sql) == TRUE) {
         header("Location: ../medicine_list.php");	

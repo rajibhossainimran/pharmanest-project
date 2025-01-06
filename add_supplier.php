@@ -19,7 +19,14 @@
       <!-- main part start  -->
       <main  class="app-main">
       <div class="form-container p-5">
-    <h3>Add Supplier</h3>
+          <div class="d-flex justify-content-between">
+        <h2 class="">Add Supplier</h2>
+            <div>
+            <a href="add_supplier_list.php" class="btn btn-success d-block my-2" role="button">
+        Show Supplier List
+        </a>
+            </div>
+        </div>
     <form method="POST" id="submitBrandForm" action="./php_action/create_add_supplier.php" enctype="multipart/form-data">
       <div class="row">
         <!-- Supplier Name -->

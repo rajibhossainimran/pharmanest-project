@@ -54,7 +54,6 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
             </div>
         </div>
 
-        <!-- Medicine Table -->
       <!-- Medicine Table -->
     <div class="table-responsive">
         <table class="table table-bordered table-hover text-center align-middle" id="medicineTable">
@@ -149,7 +148,6 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
 
     </script>
 <script>
-    // Function to add a new row to the medicine table
     // Function to add a new row to the medicine table
 function addMedicineRow() {
     const table = document.getElementById('medicineTable').getElementsByTagName('tbody')[0];

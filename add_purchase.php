@@ -42,12 +42,6 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="company" class="form-label">Company Name:</label>
-                    <input type="text" class="form-control" id="company" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
                     <label for="purchaseDate" class="form-label">Purchase Date:</label>
                     <input type="date" class="form-control" id="purchaseDate" required value="<?php echo date('Y-m-d'); ?>">
                 </div>
@@ -59,6 +53,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         <table class="table table-bordered table-hover text-center align-middle" id="medicineTable">
             <thead class="table-success">
                 <tr>
+                    <th scope="col">Batch No</th>
                     <th scope="col">Medicine Name</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Supplier Price</th>
@@ -70,6 +65,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
             </thead>
             <tbody>
                 <tr>
+                    <td><input type="text" class="form-control" name="batchNo[]" placeholder="Enter batch no" required></td>
                     <td><input type="text" class="form-control" name="medicineName[]" placeholder="Enter name" required></td>
                     <td><input type="number" class="form-control" name="quantity[]" placeholder="Enter quantity" required></td>
                     <td><input type="number" class="form-control" name="supplierPrice[]" placeholder="Supplier price" required></td>
@@ -78,7 +74,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                     <td><input type="number" class="form-control" name="totalCost[]" placeholder="Total cost" required></td>
                     <td>
                         <button type="button" class="btn btn-danger btn-sm" onclick="removeMedicineRow(this)">
-                            <i class="bi bi-trash"></i> Remove
+                            <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 </tr>
@@ -98,7 +94,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                 </div>
                 <div class="mb-3">
                     <label for="discount" class="form-label">Discount:</label>
-                    <input type="number" class="form-control" id="discount" required>
+                    <input type="number" class="form-control" id="discount" placeholder="Enter discount number" required>
                 </div>
                 <div class="mb-3">
                     <label for="payableAmount" class="form-label">Payable Amount:</label>
@@ -137,7 +133,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
 <script>
         // Function to generate a random 6-digit integer
         function generateRandomSixDigitNumber() {
-            return Math.floor(Math.random() * 900000) + 100000; // Range: 100000 to 999999
+            return Math.floor(Math.random() * 90000000) + 10000000; // Range: 100000 to 999999
         }
 
         // Generate a random number when the page loads
@@ -153,75 +149,85 @@ function addMedicineRow() {
     const table = document.getElementById('medicineTable').getElementsByTagName('tbody')[0];
     const newRow = table.insertRow();
 
-    // Medicine Name
+    // Batch Number
     const cell1 = newRow.insertCell(0);
     const input1 = document.createElement('input');
     input1.type = 'text';
     input1.className = 'form-control';
-    input1.name = 'medicineName[]';
-    input1.placeholder = 'Enter name';
+    input1.name = 'batchNo[]';
+    input1.placeholder = 'Enter batch no';
     input1.required = true;
     cell1.appendChild(input1);
 
-    // Quantity
+    // Medicine Name
     const cell2 = newRow.insertCell(1);
     const input2 = document.createElement('input');
-    input2.type = 'number';
+    input2.type = 'text';
     input2.className = 'form-control';
-    input2.name = 'quantity[]';
-    input2.placeholder = 'Enter quantity';
+    input2.name = 'medicineName[]';
+    input2.placeholder = 'Enter name';
     input2.required = true;
     cell2.appendChild(input2);
 
-    // Supplier Price
+    // Quantity
     const cell3 = newRow.insertCell(2);
     const input3 = document.createElement('input');
     input3.type = 'number';
     input3.className = 'form-control';
-    input3.name = 'supplierPrice[]';
-    input3.placeholder = 'Supplier price';
+    input3.name = 'quantity[]';
+    input3.placeholder = 'Enter quantity';
     input3.required = true;
     cell3.appendChild(input3);
 
-    // Sell Price
+    // Supplier Price
     const cell4 = newRow.insertCell(3);
     const input4 = document.createElement('input');
     input4.type = 'number';
     input4.className = 'form-control';
-    input4.name = 'sellPrice[]';
-    input4.placeholder = 'Sell price';
+    input4.name = 'supplierPrice[]';
+    input4.placeholder = 'Supplier price';
     input4.required = true;
     cell4.appendChild(input4);
 
-    // Expiry Date
+    // Sell Price
     const cell5 = newRow.insertCell(4);
     const input5 = document.createElement('input');
-    input5.type = 'date';
+    input5.type = 'number';
     input5.className = 'form-control';
-    input5.name = 'expiryDate[]';
+    input5.name = 'sellPrice[]';
+    input5.placeholder = 'Sell price';
     input5.required = true;
     cell5.appendChild(input5);
 
-    // Total Cost
+    // Expiry Date
     const cell6 = newRow.insertCell(5);
     const input6 = document.createElement('input');
-    input6.type = 'number';
+    input6.type = 'date';
     input6.className = 'form-control';
-    input6.name = 'totalCost[]';
-    input6.placeholder = 'Total cost';
+    input6.name = 'expiryDate[]';
     input6.required = true;
     cell6.appendChild(input6);
 
-    // Remove Button
+    // Total Cost
     const cell7 = newRow.insertCell(6);
+    const input7 = document.createElement('input');
+    input7.type = 'number';
+    input7.className = 'form-control';
+    input7.name = 'totalCost[]';
+    input7.placeholder = 'Total cost';
+    input7.required = true;
+    cell7.appendChild(input7);
+
+    // Remove Button
+    const cell8 = newRow.insertCell(7);
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'btn btn-danger btn-sm';
-    button.innerHTML = '<i class="bi bi-trash"></i> Remove';
+    button.innerHTML = '<i class="bi bi-trash"></i>';
     button.onclick = function () {
         removeMedicineRow(button);
     };
-    cell7.appendChild(button);
+    cell8.appendChild(button);
 }
 
 // Function to remove a row from the medicine table
@@ -229,7 +235,6 @@ function removeMedicineRow(button) {
     const row = button.closest('tr'); // Find the closest table row to the clicked button
     row.remove(); // Remove the row
 }
-
 
 </script>
     </main>

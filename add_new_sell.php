@@ -22,7 +22,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
 <main  class="app-main">
 
 <div class="container mt-5">
-<div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between">
         <h2 class="">Sell Medicines</h2>
             <div>
             <a href="sell_list.php" class="btn btn-success d-block my-2" role="button">
@@ -30,7 +30,9 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         </a>
             </div>
         </div>
-<div class="row mb-4">
+
+    <form id="sellMedicineForm">
+    <div class="row mb-4">
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="customerName" class="form-label">Customer Name:</label>
@@ -56,9 +58,8 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                 </div>
             </div>
         </div>
-
-    <form id="sellMedicineForm">
         <!-- Medicine Table -->
+
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center align-middle" id="medicineSellTable">
                 <thead class="table-success">
@@ -78,7 +79,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                         <td><input type="number" class="form-control total-cost" name="totalCost[]" readonly></td>
                         <td>
                             <button type="button" class="btn btn-danger btn-sm" onclick="removeMedicineRow(this)">
-                                <i class="bi bi-trash"></i> Remove
+                                <i class="bi bi-trash"></i>
                             </button>
                         </td>
                     </tr>
@@ -190,7 +191,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'btn btn-danger btn-sm';
-        button.innerHTML = '<i class="bi bi-trash"></i> Remove';
+        button.innerHTML = '<i class="bi bi-trash"></i>';
         button.onclick = function () {
             removeMedicineRow(button);
         };

@@ -1,5 +1,5 @@
 <aside style="background-color: #002d2d" class="app-sidebar shadow" data-bs-theme="dark"> <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand" style="height: 90px;"> <!--begin::Brand Link--> <a href="dashboard.php" class="brand-link"> <!--begin::Brand Image--> <img class="img-fluid h-50" src="./pages/img/Pharmanest4.png" alt="AdminLTE Logo" ></a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
+            <div class="sidebar-brand" style="height: 90px;"> <!--begin::Brand Link--> <a href="dashboard.php" class="brand-link"> <!--begin::Brand Image--> <img class="img-fluid h-50" src="./pages/img/Pharmanest4.png" alt="Logo" ></a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">

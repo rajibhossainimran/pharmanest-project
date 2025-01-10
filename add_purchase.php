@@ -74,7 +74,16 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
             <tbody>
                 <tr>
                     <td><input type="text" class="form-control" name="batchNo[]" placeholder="Enter batch no" required></td>
-                    <td><input type="text" class="form-control" name="medicineName[]" placeholder="Enter name" required></td>
+                    <td><select class="form-control" id="medicineSupplier" name="medicine_supplier">
+                        <option value="">--Select supplier--</option>
+                        <?php
+                        
+                            $supplierclist = $db->query("SELECT * FROM medicines");
+                            while (list($_sid, $_sname) = $supplierclist->fetch_row()) {
+                                echo "<option value='$_sid'>$_sname</option>";
+                            }
+                        ?>
+                        </select></td>
                     <td><input type="number" class="form-control" name="quantity[]" placeholder="0" required></td>
                     <td><input type="number" class="form-control" name="supplierPrice[]" placeholder="00.0" required></td>
                     <td><input type="number" class="form-control" name="sellPrice[]" placeholder="00.0" required></td>
@@ -204,16 +213,40 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         input1.required = true;
         cell1.appendChild(input1);
 
+       
+       
+       
         // Medicine Name
         const cell2 = newRow.insertCell(1);
-        const input2 = document.createElement('input');
-        input2.type = 'text';
-        input2.className = 'form-control';
-        input2.name = 'medicineName[]';
-        input2.placeholder = 'Enter name';
-        input2.required = true;
-        cell2.appendChild(input2);
+        const select2 = document.createElement('select');
+        select2.className = 'form-control';
+        select2.name = 'medicineName[]';
+        select2.required = true;
 
+        // Add placeholder option
+        const placeholderOption = document.createElement('option');
+        placeholderOption.textContent = 'Select medicine';
+        placeholderOption.value = '';
+        placeholderOption.disabled = true;
+        placeholderOption.selected = true;
+        select2.appendChild(placeholderOption);
+
+        // fetch data 
+        fetch('php_action/api_medicines.php')
+        .then(response => response.json()) 
+        .then(data => {
+            data.forEach(supplier => {
+                const option = document.createElement('option');
+                option.value = supplier.id;
+                option.textContent = supplier.m_name;
+                console.log(supplier.m_name, supplier.id);
+                select2.appendChild(option);
+            });
+        });
+        cell2.appendChild(select2);
+
+
+       
         // Quantity
         const cell3 = newRow.insertCell(2);
         const input3 = document.createElement('input');

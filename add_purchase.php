@@ -14,6 +14,28 @@
 $message_delete = isset($_GET['message_delete']) ? $_GET['message_delete'] : null;
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
+    $invoice_number = $_POST['invoice_number'];
+    $supplier_id = $_POST['medicine_supplier'];
+    $purchase_date = $_POST['purchase_date'];
+    $total_amount = $_POST['total_amount'];
+    $discount = $_POST['discount'];
+    $received_amount = $_POST['received_amount'];
+    $due_amount = $_POST['due_amount'];
+    $status = $_POST['status'];
+
+    $stmt = $db->prepare("INSERT INTO purchase_details (invoice_number, supplier_id, purchase_date, total_amount, discount, received_amount, due_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sisddddd", $invoice_number, $supplier_id, $purchase_date, $total_amount, $discount, $received_amount, $due_amount, $status);
+
+    if ($stmt->execute()) {
+        echo "Purchase details saved successfully.";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
 ?>
         
  
@@ -73,7 +95,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
             </thead>
             <tbody>
                 <tr>
-                    <td><input type="text" class="form-control" name="batchNo[]" placeholder="Enter batch no" required></td>
+                    <td><input type="text" class="form-control" name="batchNo[]" placeholder="Enter batch no" ></td>
                     <td><select class="form-control" id="medicineSupplier" name="medicine_supplier">
                         <option value="">--Select supplier--</option>
                         <?php
@@ -111,7 +133,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                 </div>
                 <div class="mb-3">
                     <label for="discount" class="form-label">Discount:</label>
-                    <input type="number" class="form-control" id="discount" placeholder="%" required>
+                    <input type="number" class="form-control" id="discount" placeholder="%">
                 </div>
                 <div class="mb-3">
                     <label for="payableAmount" class="form-label">Payable Amount:</label>
@@ -119,7 +141,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                 </div>
                 <div class="mb-3">
                     <label for="receivedAmount" class="form-label">Received Amount:</label>
-                    <input type="number" class="form-control" id="receivedAmount" placeholder="Enter Amount" required>
+                    <input type="number" class="form-control" id="receivedAmount" placeholder="Enter Amount">
                 </div>
                 <div class="mb-3">
                     <label for="dueAmount" class="form-label">Due Amount:</label>
@@ -154,7 +176,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         const discountInput = parseFloat(document.getElementById('discount').value) || 0;
         const discount = subAmount * (discountInput / 100);
         const payableAmount = subAmount - discount;
-        document.getElementById('payableAmount').value = payableAmount.toFixed(2);
+        document.getElementById('payableAmount').value = payableAmount.toFixed(0);
         calculateDueAmount(); // Update due amount whenever payable amount changes
     }
 
@@ -163,7 +185,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         const payableAmount = parseFloat(document.getElementById('payableAmount').value) || 0;
         const receivedAmount = parseFloat(document.getElementById('receivedAmount').value) || 0;
         const dueAmount = payableAmount - receivedAmount;
-        document.getElementById('dueAmount').value = dueAmount.toFixed(2);
+        document.getElementById('dueAmount').value = dueAmount.toFixed(0);
     }
 
     // Calculate the due amount when the received amount changes

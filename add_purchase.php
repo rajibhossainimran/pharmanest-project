@@ -1,20 +1,18 @@
- 
 <?php include('check_user.php'); ?>
 <!-- database  -->
- <?php require_once './config/config.php';?>
+<?php require_once './config/config.php';?>
 <!-- header part  -->
- <?php  include("./pages/common_pages/header.php");?>
+<?php include("./pages/common_pages/header.php");?>
 
-
-
-        <!--navber and sideber part start-->
- <?php include("./pages/common_pages/navber.php");?>
- <?php include("./pages/common_pages/sidebar.php");?>
+<!--navber and sideber part start-->
+<?php include("./pages/common_pages/navber.php");?>
+<?php include("./pages/common_pages/sidebar.php");?>
 <?php 
 $message_delete = isset($_GET['message_delete']) ? $_GET['message_delete'] : null;
 $type = isset($_GET['type']) ? $_GET['type'] : null;
+?>
 
-
+<?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
     $invoice_number = $_POST['invoice_number'];
     $supplier_id = $_POST['medicine_supplier'];
@@ -25,46 +23,83 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
     $due_amount = $_POST['due_amount'];
     $status = $_POST['status'];
 
-    $stmt = $db->prepare("INSERT INTO purchase_details (invoice_number, supplier_id, purchase_date, total_amount, discount, received_amount, due_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sisddddd", $invoice_number, $supplier_id, $purchase_date, $total_amount, $discount, $received_amount, $due_amount, $status);
+    // Get medicine details
+    $batchNos = $_POST['batchNo'];
+    $medicineIds = $_POST['medicineName'];
+    $quantities = $_POST['quantity'];
+    $supplierPrices = $_POST['supplierPrice'];
+    $sellPrices = $_POST['sellPrice'];
+    $expiryDates = $_POST['expiryDate'];
+    $totalCosts = $_POST['totalCost'];
 
-    if ($stmt->execute()) {
-        echo "Purchase details saved successfully.";
-    } else {
-        echo "Error: " . $stmt->error;
+    // Begin transaction
+    $db->begin_transaction();
+
+    try {
+        // Insert into `purchase_details`
+        $stmt = $db->prepare("INSERT INTO purchase_details (invoice, supp_id, purch_date, total_amount, discount, received_amount, due_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sisddddd", $invoice_number, $supplier_id, $purchase_date, $total_amount, $discount, $received_amount, $due_amount, $status);
+
+        if (!$stmt->execute()) {
+            throw new Exception("Failed to insert into purchase_details: " . $stmt->error);
+        }
+
+        $stmt->close();
+
+        // Insert into `medicine_stock`
+        $stmt = $db->prepare("INSERT INTO medicine_stock (batch_no, medicine_id, quantity, supp_price, sell_price, expiry_date) VALUES (?, ?, ?, ?, ?, ?)");
+
+        foreach ($batchNos as $index => $batchNo) {
+            $medicineId = $medicineIds[$index];
+            $quantity = $quantities[$index];
+            $supplierPrice = $supplierPrices[$index];
+            $sellPrice = $sellPrices[$index];
+            $expiryDate = $expiryDates[$index];
+
+            $stmt->bind_param("siiddd", $batchNo, $medicineId, $quantity, $supplierPrice, $sellPrice, $expiryDate);
+
+            if (!$stmt->execute()) {
+                throw new Exception("Failed to insert into medicine_stock: " . $stmt->error);
+            }
+        }
+
+        $stmt->close();
+
+        // Commit transaction
+        $db->commit();
+        echo "Purchase details and stock information saved successfully.";
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $db->rollback();
+        echo "Error: " . $e->getMessage();
     }
-
-    $stmt->close();
 }
 ?>
-        
- 
 
-<main  class="app-main">
+<main class="app-main">
 <div class="container mt-2 mb-5">
     <h2>Add Purchase</h2>
     <form method="POST" id="purchaseBtnSubmit" action="" enctype="multipart/form-data">
         <!-- Supplier Information -->
         <div class="row mb-4">
             <div class="col-md-6">
-            <div class="mb-3">
-                        <label for="supplierName" class="form-label">Supplier Name:</label>
-                        <select class="form-control" id="medicineSupplier" name="medicine_supplier">
+                <div class="mb-3">
+                    <label for="supplierName" class="form-label">Supplier Name:</label>
+                    <select class="form-control" id="medicineSupplier" name="medicine_supplier">
                         <option value="">--Select supplier--</option>
                         <?php
-                        
                             $supplierclist = $db->query("SELECT * FROM supplier_add");
                             while (list($_sid, $_sname) = $supplierclist->fetch_row()) {
                                 echo "<option value='$_sid'>$_sname</option>";
                             }
                         ?>
-                        </select>
-                    </div>
+                    </select>
+                </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="invoice" class="form-label">Invoice Number:</label>
-                    <input type="text" class="form-control" id="randomNumber" readonly>
+                    <input type="text" name="invoice_number" class="form-control" id="randomNumber" readonly>
                 </div>
             </div>
         </div>
@@ -73,53 +108,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="purchaseDate" class="form-label">Purchase Date:</label>
-                    <input type="date" class="form-control" id="purchaseDate" required value="<?php echo date('Y-m-d'); ?>">
+                    <input type="date" name="purchase_date" class="form-control" id="purchaseDate" required value="<?php echo date('Y-m-d'); ?>">
                 </div>
             </div>
         </div>
 
-      <!-- Medicine Table -->
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover text-center align-middle" id="medicineTable">
-            <thead class="table-success">
-                <tr>
-                    <th scope="col">Batch No</th>
-                    <th scope="col">Medicine Name</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Supplier Price</th>
-                    <th scope="col">Sell Price</th>
-                    <th scope="col">Expiry Date</th>
-                    <th scope="col">Total Cost</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="text" class="form-control" name="batchNo[]" placeholder="Enter batch no" ></td>
-                    <td><select class="form-control" id="medicineSupplier" name="medicine_supplier">
-                        <option value="">--Select supplier--</option>
-                        <?php
-                        
-                            $supplierclist = $db->query("SELECT * FROM medicines");
-                            while (list($_sid, $_sname) = $supplierclist->fetch_row()) {
-                                echo "<option value='$_sid'>$_sname</option>";
-                            }
-                        ?>
-                        </select></td>
-                    <td><input type="number" class="form-control" name="quantity[]" placeholder="0" required></td>
-                    <td><input type="number" class="form-control" name="supplierPrice[]" placeholder="00.0" required></td>
-                    <td><input type="number" class="form-control" name="sellPrice[]" placeholder="00.0" required></td>
-                    <td><input type="date" class="form-control" name="expiryDate[]" required></td>
-                    <td><input type="number" class="form-control" name="totalCost[]" placeholder="00.0" required></td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm" onclick="removeMedicineRow(this)">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <!-- Hidden input for total amount -->
+        <input type="hidden" name="total_amount" id="totalAmount">
+
+        <!-- Medicine Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center align-middle" id="medicineTable">
+                <thead class="table-success">
+                    <tr>
+                        <th scope="col">Batch No</th>
+                        <th scope="col">Medicine Name</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Supplier Price</th>
+                        <th scope="col">Sell Price</th>
+                        <th scope="col">Expiry Date</th>
+                        <th scope="col">Total Cost</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="form-control" name="batchNo[]" placeholder="Enter batch no" required></td>
+                        <td><select class="form-control" name="medicineName[]" required>
+                            <option value="">--Select medicine--</option>
+                            <?php
+                                $supplierclist = $db->query("SELECT * FROM medicines");
+                                while (list($_sid, $_sname) = $supplierclist->fetch_row()) {
+                                    echo "<option value='$_sid'>$_sname</option>";
+                                }
+                            ?>
+                            </select></td>
+                        <td><input type="number" class="form-control" name="quantity[]" placeholder="0" required></td>
+                        <td><input type="number" class="form-control" name="supplierPrice[]" placeholder="00.0" required></td>
+                        <td><input type="number" class="form-control" name="sellPrice[]" placeholder="00.0" required></td>
+                        <td><input type="date" class="form-control" name="expiryDate[]" required></td>
+                        <td><input type="number" class="form-control" name="totalCost[]" placeholder="00.0" required></td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeMedicineRow(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <button title="add medicine" type="button" class="btn btn-primary" onclick="addMedicineRow()"><i class="bi bi-plus-square"></i></button>
 
@@ -133,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
                 </div>
                 <div class="mb-3">
                     <label for="discount" class="form-label">Discount:</label>
-                    <input type="number" class="form-control" id="discount" placeholder="%">
+                    <input type="number" name="discount" class="form-control" id="discount" placeholder="%">
                 </div>
                 <div class="mb-3">
                     <label for="payableAmount" class="form-label">Payable Amount:</label>
@@ -141,15 +178,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
                 </div>
                 <div class="mb-3">
                     <label for="receivedAmount" class="form-label">Received Amount:</label>
-                    <input type="number" class="form-control" id="receivedAmount" placeholder="Enter Amount">
+                    <input type="number" name="received_amount" class="form-control" id="receivedAmount" placeholder="Enter Amount">
                 </div>
                 <div class="mb-3">
                     <label for="dueAmount" class="form-label">Due Amount:</label>
-                    <input type="number" class="form-control" id="dueAmount" required>
+                    <input type="number" name="due_amount" class="form-control" id="dueAmount" required>
                 </div>
                 <div class="mb-3">
                     <label for="paymentStatus" class="form-label">Payment Status:</label>
-                    <select class="form-control" id="paymentStatus">
+                    <select class="form-control" id="paymentStatus" name="status">
                         <option value="0">Paid</option>
                         <option value="1">Unpaid</option>
                         <option value="2">Partially Paid</option>
@@ -160,14 +197,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
         <div class="row ">
             <div class="col-4"></div>
             <div class="col-4 text-center">
-            <button type="submit" class="btn btn-success" name="purchaseBtn">Submit</button>
+                <button type="submit" class="btn btn-success" name="purchaseBtn">Submit</button>
             </div>
             <div class="col-4"></div>
-        
         </div>
     </form>
 </div>
 </main>
+
 <!-- calculation part start  -->
 <script>
     // Calculate the payable amount
@@ -177,6 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
         const discount = subAmount * (discountInput / 100);
         const payableAmount = subAmount - discount;
         document.getElementById('payableAmount').value = payableAmount.toFixed(0);
+        document.getElementById('totalAmount').value = subAmount.toFixed(0); // Set total amount
         calculateDueAmount(); // Update due amount whenever payable amount changes
     }
 
@@ -209,7 +247,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
 
     // Calculate the total cost and payable amount when the form is submitted
     document.getElementById('purchaseBtnSubmit').addEventListener('submit', function(event) {
-        event.preventDefault();
         calculatePayableAmount();
         calculateDueAmount();
     });
@@ -235,9 +272,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
         input1.required = true;
         cell1.appendChild(input1);
 
-       
-       
-       
         // Medicine Name
         const cell2 = newRow.insertCell(1);
         const select2 = document.createElement('select');
@@ -267,8 +301,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
         });
         cell2.appendChild(select2);
 
-
-       
         // Quantity
         const cell3 = newRow.insertCell(2);
         const input3 = document.createElement('input');
@@ -388,28 +420,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
 </script>
 
 <script>
-        // Function to generate a random 6-digit integer
-        function generateRandomSixDigitNumber() {
-            return Math.floor(Math.random() * 90000000) + 10000000; // Range: 100000 to 999999
-        }
+    // Function to generate a random 6-digit integer
+    function generateRandomSixDigitNumber() {
+        return Math.floor(Math.random() * 90000000) + 10000000; // Range: 100000 to 999999
+    }
 
-        // Generate a random number when the page loads
-        window.onload = function() {
-            const randomNumber = generateRandomSixDigitNumber();
-            document.getElementById('randomNumber').value = randomNumber;
-        };
-
+    // Generate a random number when the page loads
+    window.onload = function() {
+        const randomNumber = generateRandomSixDigitNumber();
+        document.getElementById('randomNumber').value = randomNumber;
+    };
 </script>
 
-    </main>
-     <!-- main part end -->
+</main>
+<!-- main part end -->
 
-
-        <!-- footer part start  -->
+<!-- footer part start  -->
 <?php include("./pages/common_pages/footer.php");?>
-
-
-
-    
-   
-                

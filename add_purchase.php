@@ -59,14 +59,14 @@ if (isset($_POST['purchaseBtn'])) {
 
     echo "<h3>Medicine Details:</h3>";
 
-    // Get medicine stock 
-    $batchNos = $_POST['batchNo'];
-    $medicineIds = $_POST['medicineName'];
-    $quantities = $_POST['quantity'];
-    $supplierPrices = $_POST['supplierPrice'];
-    $sellPrices = $_POST['sellPrice'];
-    $expiryDates = $_POST['expiryDate'];
-    $totalCosts = $_POST['totalCost'];
+        // Data from POST
+        $batchNos = $_POST['batchNo'];
+        $medicineIds = $_POST['medicineName'];
+        $quantities = $_POST['quantity'];
+        $supplierPrices = $_POST['supplierPrice'];
+        $sellPrices = $_POST['sellPrice'];
+        $expiryDates = $_POST['expiryDate'];
+        $totalCosts = $_POST['totalCost'];
 
     
     if (!empty($batchNos)) {
@@ -79,44 +79,55 @@ if (isset($_POST['purchaseBtn'])) {
             $totalCost = $totalCosts[$index];
 
 
-            $stock_sql = "
-            INSERT INTO purchase_details (
-                batch_no, 
-                medicine_id, 
-                quantity, 
-                supp_price, 
-                sell_price, 
-                expire_date
-            ) 
-            VALUES (
-                '$batchNo', 
-                '$medicineId', 
-                '$quantity', 
-                '$supplierPrice', 
-                '$sellPrice', 
-                '$expiryDate'
-            )
-          ";
-        if (mysqli_query($db, $stock_sql)) {
-            // Store the success message in session
-            $_SESSION['success'] = "Category created successfully";
-        } else {
-            // Store the error message with details in session
-            $_SESSION['error'] = "Failed to create category: " . mysqli_error($db);
+            // check if medicine stock exists
+            $sql = "SELECT medicine_id FROM medicine_stock WHERE medicine_id = $medicineId";
+
+            if($sql){
+                $getQuantity = "SELECT quantity FROM medicine_stock WHERE medicine_id = $medicineId";
+
+                $updateQunatity = $getQuantity + $quantity;
+
+                $updateSql="UPDATE medicine_stock SET quantity = '$updateQunatity', supp_pirce = '$supplierPrice', sell_price = '$sellPrice', expire_date = '$expiryDate' WHERE medicine_id = $medicineId";
+
+                if($db->query($updateSql) == TRUE) {
+                    echo "Record updated successfully for batch: $batchNo<br>";	
+               } else {
+                    echo "edit cannot work";
+               }
+
+            }else{
+                // Prepare and execute the SQL query
+                    $stmt = $db->prepare("
+                    INSERT INTO medicine_stock (
+                        batch_no, 
+                        medicine_id, 
+                        quantity, 
+                        supp_price, 
+                        sell_price, 
+                        expire_date
+                    ) 
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ");
+                $stmt->bind_param("siidds", $batchNo, $medicineId, $quantity, $supplierPrice, $sellPrice, $expiryDate);
+
+                if ($stmt->execute()) {
+                    echo "Record inserted successfully for batch: $batchNo<br>";
+                } else {
+                    echo "Error: " . $stmt->error . "<br>";
+                }
+            }
+            
         }
-            echo "<strong>Medicine " . ($index + 1) . ":</strong><br>";
-            echo "Batch No: " . htmlspecialchars($batchNo) . "<br>";
-            echo "Medicine ID: " . htmlspecialchars($medicineId) . "<br>";
-            echo "Quantity: " . htmlspecialchars($quantity) . "<br>";
-            echo "Supplier Price: " . htmlspecialchars($supplierPrice) . "<br>";
-            echo "Sell Price: " . htmlspecialchars($sellPrice) . "<br>";
-            echo "Expiry Date: " . htmlspecialchars($expiryDate) . "<br>";
-            echo "Total Cost: " . htmlspecialchars($totalCost) . "<br>";
-            echo "<hr>";
+    // data send in purchase_details table
+        if (mysqli_query($db, $detail_sql)) {
+            $_SESSION['success'] = "purchase created successfully";
+        } else {
+            $_SESSION['error'] = "Failed to create purchase: " . mysqli_error($db);
         }
     } else {
         echo "No medicine details provided.<br>";
     }
+    $db->close();
 
     // / Execute the SQL queries
 

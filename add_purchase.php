@@ -13,7 +13,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
 ?>
 
 <?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
+if (isset($_POST['purchaseBtn'])) {
     $invoice_number = $_POST['invoice_number'];
     $supplier_id = $_POST['medicine_supplier'];
     $purchase_date = $_POST['purchase_date'];
@@ -23,6 +23,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
     $due_amount = $_POST['due_amount'];
     $status = $_POST['status'];
 
+    $detail_sql = "
+    INSERT INTO purchase_details (
+        invoice, 
+        supp_name, 
+        purch_date, 
+        total_amount, 
+        discount, 
+        receive_amount, 
+        due_amount, 
+        status
+    ) 
+    VALUES (
+        '$invoice_number', 
+        '$supplier_id', 
+        '$purchase_date', 
+        '$total_amount', 
+        '$discount', 
+        '$received_amount', 
+        '$due_amount', 
+        '$status'
+    )
+";
     // Get medicine details
     $batchNos = $_POST['batchNo'];
     $medicineIds = $_POST['medicineName'];
@@ -32,48 +54,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
     $expiryDates = $_POST['expiryDate'];
     $totalCosts = $_POST['totalCost'];
 
-    // Begin transaction
-    $db->begin_transaction();
+    // Display values
+    echo "<h3>Purchase Details:</h3>";
+    echo "Invoice Number: " . htmlspecialchars($invoice_number) . "<br>";
+    echo "Supplier ID: " . htmlspecialchars($supplier_id) . "<br>";
+    echo "Purchase Date: " . htmlspecialchars($purchase_date) . "<br>";
+    echo "Total Amount: " . htmlspecialchars($total_amount) . "<br>";
+    echo "Discount: " . htmlspecialchars($discount) . "<br>";
+    echo "Received Amount: " . htmlspecialchars($received_amount) . "<br>";
+    echo "Due Amount: " . htmlspecialchars($due_amount) . "<br>";
+    echo "Status: " . htmlspecialchars($status) . "<br>";
 
-    try {
-        // Insert into `purchase_details`
-        $stmt = $db->prepare("INSERT INTO purchase_details (invoice, supp_id, purch_date, total_amount, discount, received_amount, due_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sisddddd", $invoice_number, $supplier_id, $purchase_date, $total_amount, $discount, $received_amount, $due_amount, $status);
-
-        if (!$stmt->execute()) {
-            throw new Exception("Failed to insert into purchase_details: " . $stmt->error);
-        }
-
-        $stmt->close();
-
-        // Insert into `medicine_stock`
-        $stmt = $db->prepare("INSERT INTO medicine_stock (batch_no, medicine_id, quantity, supp_price, sell_price, expiry_date) VALUES (?, ?, ?, ?, ?, ?)");
-
+    echo "<h3>Medicine Details:</h3>";
+    
+    if (!empty($batchNos)) {
         foreach ($batchNos as $index => $batchNo) {
             $medicineId = $medicineIds[$index];
             $quantity = $quantities[$index];
             $supplierPrice = $supplierPrices[$index];
             $sellPrice = $sellPrices[$index];
             $expiryDate = $expiryDates[$index];
+            $totalCost = $totalCosts[$index];
 
-            $stmt->bind_param("siiddd", $batchNo, $medicineId, $quantity, $supplierPrice, $sellPrice, $expiryDate);
 
-            if (!$stmt->execute()) {
-                throw new Exception("Failed to insert into medicine_stock: " . $stmt->error);
-            }
+            $stock_sql = "
+            INSERT INTO purchase_details (
+                batch_no, 
+                medicine_id, 
+                qunatity, 
+                supp_price, 
+                sell_price, 
+                expire_date, 
+            ) 
+            VALUES (
+                '$batchNo', 
+                '$medicineId', 
+                '$quantity', 
+                '$supplierPrice', 
+                '$sellPrice', 
+                '$expiryDate'
+            )
+        ";
+    
+            echo "<strong>Medicine " . ($index + 1) . ":</strong><br>";
+            echo "Batch No: " . htmlspecialchars($batchNo) . "<br>";
+            echo "Medicine ID: " . htmlspecialchars($medicineId) . "<br>";
+            echo "Quantity: " . htmlspecialchars($quantity) . "<br>";
+            echo "Supplier Price: " . htmlspecialchars($supplierPrice) . "<br>";
+            echo "Sell Price: " . htmlspecialchars($sellPrice) . "<br>";
+            echo "Expiry Date: " . htmlspecialchars($expiryDate) . "<br>";
+            echo "Total Cost: " . htmlspecialchars($totalCost) . "<br>";
+            echo "<hr>";
         }
-
-        $stmt->close();
-
-        // Commit transaction
-        $db->commit();
-        echo "Purchase details and stock information saved successfully.";
-    } catch (Exception $e) {
-        // Rollback transaction on error
-        $db->rollback();
-        echo "Error: " . $e->getMessage();
+    } else {
+        echo "No medicine details provided.<br>";
     }
 }
+
+ 
 ?>
 
 <main class="app-main">
@@ -197,7 +235,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['purchaseBtn'])) {
         <div class="row ">
             <div class="col-4"></div>
             <div class="col-4 text-center">
-                <button type="submit" class="btn btn-success" name="purchaseBtn">Submit</button>
+            <button type="submit" class="btn btn-success" name="purchaseBtn">Submit</button>
+
             </div>
             <div class="col-4"></div>
         </div>

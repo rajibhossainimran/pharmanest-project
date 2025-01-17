@@ -45,15 +45,7 @@ if (isset($_POST['purchaseBtn'])) {
         '$status'
     )
 ";
-    // Get medicine details
-    $batchNos = $_POST['batchNo'];
-    $medicineIds = $_POST['medicineName'];
-    $quantities = $_POST['quantity'];
-    $supplierPrices = $_POST['supplierPrice'];
-    $sellPrices = $_POST['sellPrice'];
-    $expiryDates = $_POST['expiryDate'];
-    $totalCosts = $_POST['totalCost'];
-
+    
     // Display values
     echo "<h3>Purchase Details:</h3>";
     echo "Invoice Number: " . htmlspecialchars($invoice_number) . "<br>";
@@ -66,6 +58,16 @@ if (isset($_POST['purchaseBtn'])) {
     echo "Status: " . htmlspecialchars($status) . "<br>";
 
     echo "<h3>Medicine Details:</h3>";
+
+    // Get medicine stock 
+    $batchNos = $_POST['batchNo'];
+    $medicineIds = $_POST['medicineName'];
+    $quantities = $_POST['quantity'];
+    $supplierPrices = $_POST['supplierPrice'];
+    $sellPrices = $_POST['sellPrice'];
+    $expiryDates = $_POST['expiryDate'];
+    $totalCosts = $_POST['totalCost'];
+
     
     if (!empty($batchNos)) {
         foreach ($batchNos as $index => $batchNo) {
@@ -81,10 +83,10 @@ if (isset($_POST['purchaseBtn'])) {
             INSERT INTO purchase_details (
                 batch_no, 
                 medicine_id, 
-                qunatity, 
+                quantity, 
                 supp_price, 
                 sell_price, 
-                expire_date, 
+                expire_date
             ) 
             VALUES (
                 '$batchNo', 
@@ -94,8 +96,14 @@ if (isset($_POST['purchaseBtn'])) {
                 '$sellPrice', 
                 '$expiryDate'
             )
-        ";
-    
+          ";
+        if (mysqli_query($db, $stock_sql)) {
+            // Store the success message in session
+            $_SESSION['success'] = "Category created successfully";
+        } else {
+            // Store the error message with details in session
+            $_SESSION['error'] = "Failed to create category: " . mysqli_error($db);
+        }
             echo "<strong>Medicine " . ($index + 1) . ":</strong><br>";
             echo "Batch No: " . htmlspecialchars($batchNo) . "<br>";
             echo "Medicine ID: " . htmlspecialchars($medicineId) . "<br>";
@@ -109,6 +117,9 @@ if (isset($_POST['purchaseBtn'])) {
     } else {
         echo "No medicine details provided.<br>";
     }
+
+    // / Execute the SQL queries
+
 }
 
  

@@ -12,134 +12,24 @@ $message_delete = isset($_GET['message_delete']) ? $_GET['message_delete'] : nul
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 ?>
 
-<?php
-if (isset($_POST['purchaseBtn'])) {
-    $invoice_number = $_POST['invoice_number'];
-    $supplier_id = $_POST['medicine_supplier'];
-    $purchase_date = $_POST['purchase_date'];
-    $total_amount = $_POST['total_amount'];
-    $discount = $_POST['discount'];
-    $received_amount = $_POST['received_amount'];
-    $due_amount = $_POST['due_amount'];
-    $status = $_POST['status'];
 
-    $detail_sql = "
-    INSERT INTO purchase_details (
-        invoice, 
-        supp_name, 
-        purch_date, 
-        total_amount, 
-        discount, 
-        receive_amount, 
-        due_amount, 
-        status
-    ) 
-    VALUES (
-        '$invoice_number', 
-        '$supplier_id', 
-        '$purchase_date', 
-        '$total_amount', 
-        '$discount', 
-        '$received_amount', 
-        '$due_amount', 
-        '$status'
-    )
-";
-    
-    // Display values
-    echo "<h3>Purchase Details:</h3>";
-    echo "Invoice Number: " . htmlspecialchars($invoice_number) . "<br>";
-    echo "Supplier ID: " . htmlspecialchars($supplier_id) . "<br>";
-    echo "Purchase Date: " . htmlspecialchars($purchase_date) . "<br>";
-    echo "Total Amount: " . htmlspecialchars($total_amount) . "<br>";
-    echo "Discount: " . htmlspecialchars($discount) . "<br>";
-    echo "Received Amount: " . htmlspecialchars($received_amount) . "<br>";
-    echo "Due Amount: " . htmlspecialchars($due_amount) . "<br>";
-    echo "Status: " . htmlspecialchars($status) . "<br>";
-
-    echo "<h3>Medicine Details:</h3>";
-
-        // Data from POST
-        $batchNos = $_POST['batchNo'];
-        $medicineIds = $_POST['medicineName'];
-        $quantities = $_POST['quantity'];
-        $supplierPrices = $_POST['supplierPrice'];
-        $sellPrices = $_POST['sellPrice'];
-        $expiryDates = $_POST['expiryDate'];
-        $totalCosts = $_POST['totalCost'];
-
-    
-    if (!empty($batchNos)) {
-        foreach ($batchNos as $index => $batchNo) {
-            $medicineId = $medicineIds[$index];
-            $quantity = $quantities[$index];
-            $supplierPrice = $supplierPrices[$index];
-            $sellPrice = $sellPrices[$index];
-            $expiryDate = $expiryDates[$index];
-            $totalCost = $totalCosts[$index];
-
-
-            // check if medicine stock exists
-            $sql = "SELECT medicine_id FROM medicine_stock WHERE medicine_id = $medicineId";
-
-            if($sql){
-                $getQuantity = "SELECT quantity FROM medicine_stock WHERE medicine_id = $medicineId";
-
-                $updateQunatity = $getQuantity + $quantity;
-
-                $updateSql="UPDATE medicine_stock SET quantity = '$updateQunatity', supp_pirce = '$supplierPrice', sell_price = '$sellPrice', expire_date = '$expiryDate' WHERE medicine_id = $medicineId";
-
-                if($db->query($updateSql) == TRUE) {
-                    echo "Record updated successfully for batch: $batchNo<br>";	
-               } else {
-                    echo "edit cannot work";
-               }
-
-            }else{
-                // Prepare and execute the SQL query
-                    $stmt = $db->prepare("
-                    INSERT INTO medicine_stock (
-                        batch_no, 
-                        medicine_id, 
-                        quantity, 
-                        supp_price, 
-                        sell_price, 
-                        expire_date
-                    ) 
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ");
-                $stmt->bind_param("siidds", $batchNo, $medicineId, $quantity, $supplierPrice, $sellPrice, $expiryDate);
-
-                if ($stmt->execute()) {
-                    echo "Record inserted successfully for batch: $batchNo<br>";
-                } else {
-                    echo "Error: " . $stmt->error . "<br>";
-                }
-            }
-            
-        }
-    // data send in purchase_details table
-        if (mysqli_query($db, $detail_sql)) {
-            $_SESSION['success'] = "purchase created successfully";
-        } else {
-            $_SESSION['error'] = "Failed to create purchase: " . mysqli_error($db);
-        }
-    } else {
-        echo "No medicine details provided.<br>";
-    }
-    $db->close();
-
-    // / Execute the SQL queries
-
-}
-
- 
-?>
 
 <main class="app-main">
 <div class="container mt-2 mb-5">
     <h2>Add Purchase</h2>
-    <form method="POST" id="purchaseBtnSubmit" action="" enctype="multipart/form-data">
+      <!-- display error message  -->
+      <?php
+        if (isset($_SESSION['success'])) {
+            echo "<p id='message' style='color: green;font-size: 30px;background-color: lightgreen; text-align: center; padding-left: 20px; padding-right: 20px; margin-left: 10px; margin-right: 10px;'>" . htmlspecialchars($_SESSION['success']) . "</p>";
+            unset($_SESSION['success']); // Clear the message after displaying it
+        }
+        
+        if (isset($_SESSION['error'])) {
+            echo "<p id='message' style='color: red;font-size: 30px;background-color: lightred; text-align: center; padding-left: 20px; padding-right: 20px; margin-left: 10px; margin-right: 10px;'>" . htmlspecialchars($_SESSION['error']) . "</p>";
+            unset($_SESSION['error']); // Clear the message after displaying it
+        }
+        ?>
+    <form method="POST" id="purchaseBtnSubmit" action="./php_action/create_purchase.php" enctype="multipart/form-data">
         <!-- Supplier Information -->
         <div class="row mb-4">
             <div class="col-md-6">
@@ -491,6 +381,15 @@ if (isset($_POST['purchaseBtn'])) {
         const randomNumber = generateRandomSixDigitNumber();
         document.getElementById('randomNumber').value = randomNumber;
     };
+</script>
+<script>
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+        const messageElement = document.getElementById('message');
+        if (messageElement) {
+            messageElement.style.display = 'none';
+        }
+    }, 1000);
 </script>
 
 </main>

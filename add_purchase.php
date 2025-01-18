@@ -16,7 +16,14 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
 
 <main class="app-main">
 <div class="container mt-2 mb-5">
-    <h2>Add Purchase</h2>
+    <div class="d-flex justify-content-between">
+        <h2 class="">Add Purchase</h2>
+            <div>
+            <a href="purchase_list.php" class="btn btn-success d-block my-2" role="button">
+        Vew Purchase List
+        </a>
+            </div>
+        </div>
       <!-- display error message  -->
       <?php
         if (isset($_SESSION['success'])) {

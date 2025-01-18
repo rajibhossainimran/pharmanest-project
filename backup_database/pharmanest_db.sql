@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 13, 2025 at 09:11 AM
+-- Generation Time: Jan 18, 2025 at 08:32 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -142,8 +142,17 @@ CREATE TABLE `medicine_stock` (
   `quantity` int(15) NOT NULL,
   `supp_price` double(10,2) NOT NULL,
   `sell_price` double(10,2) NOT NULL,
-  `expire_date` date NOT NULL
+  `expire_date` date NOT NULL,
+  `purchase_invoice` int(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `medicine_stock`
+--
+
+INSERT INTO `medicine_stock` (`id`, `batch_no`, `medicine_id`, `quantity`, `supp_price`, `sell_price`, `expire_date`, `purchase_invoice`) VALUES
+(7, '2323ds', 5, 200, 2.00, 3.00, '2025-12-19', 77672540),
+(8, 'im2372', 10, 300, 12.00, 15.00, '2027-06-19', 77672540);
 
 -- --------------------------------------------------------
 
@@ -198,8 +207,38 @@ CREATE TABLE `purchase_details` (
   `discount` int(5) DEFAULT NULL,
   `receive_amount` double(10,2) DEFAULT NULL,
   `due_amount` double(10,2) DEFAULT NULL,
-  `status` int(10) NOT NULL
+  `status` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `purchase_details`
+--
+
+INSERT INTO `purchase_details` (`id`, `invoice`, `supp_name`, `purch_date`, `total_amount`, `discount`, `receive_amount`, `due_amount`, `status`) VALUES
+(12, 77672540, 6, '2025-01-18', 4000.00, 5, 3000.00, 800.00, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `purchase_quantity`
+--
+
+CREATE TABLE `purchase_quantity` (
+  `id` int(10) NOT NULL,
+  `medicine_id` int(10) NOT NULL,
+  `quantity` int(10) NOT NULL,
+  `per_price` double(10,2) NOT NULL,
+  `total_cost` double(10,2) NOT NULL,
+  `purchase_invoice` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `purchase_quantity`
+--
+
+INSERT INTO `purchase_quantity` (`id`, `medicine_id`, `quantity`, `per_price`, `total_cost`, `purchase_invoice`) VALUES
+(5, 5, 200, 2.00, 400.00, 77672540),
+(6, 10, 300, 12.00, 3600.00, 77672540);
 
 -- --------------------------------------------------------
 
@@ -305,6 +344,12 @@ ALTER TABLE `purchase_details`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `purchase_quantity`
+--
+ALTER TABLE `purchase_quantity`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `supplier_add`
 --
 ALTER TABLE `supplier_add`
@@ -348,7 +393,7 @@ ALTER TABLE `medicines`
 -- AUTO_INCREMENT for table `medicine_stock`
 --
 ALTER TABLE `medicine_stock`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `medicine_type`
@@ -360,7 +405,13 @@ ALTER TABLE `medicine_type`
 -- AUTO_INCREMENT for table `purchase_details`
 --
 ALTER TABLE `purchase_details`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `purchase_quantity`
+--
+ALTER TABLE `purchase_quantity`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `supplier_add`

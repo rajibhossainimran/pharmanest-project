@@ -35,27 +35,15 @@ if (isset($_POST['purchaseBtn'])) {
     )
 ";
     
-    // Display values
-    // echo "<h3>Purchase Details:</h3>";
-    // echo "Invoice Number: " . htmlspecialchars($invoice_number) . "<br>";
-    // echo "Supplier ID: " . htmlspecialchars($supplier_id) . "<br>";
-    // echo "Purchase Date: " . htmlspecialchars($purchase_date) . "<br>";
-    // echo "Total Amount: " . htmlspecialchars($total_amount) . "<br>";
-    // echo "Discount: " . htmlspecialchars($discount) . "<br>";
-    // echo "Received Amount: " . htmlspecialchars($received_amount) . "<br>";
-    // echo "Due Amount: " . htmlspecialchars($due_amount) . "<br>";
-    // echo "Status: " . htmlspecialchars($status) . "<br>";
 
-    // echo "<h3>Medicine Details:</h3>";
-
-        // Data from POST
-        $batchNos = $_POST['batchNo'];
-        $medicineIds = $_POST['medicineName'];
-        $quantities = $_POST['quantity'];
-        $supplierPrices = $_POST['supplierPrice'];
-        $sellPrices = $_POST['sellPrice'];
-        $expiryDates = $_POST['expiryDate'];
-        $totalCosts = $_POST['totalCost'];
+    // Data from POST
+    $batchNos = $_POST['batchNo'];
+    $medicineIds = $_POST['medicineName'];
+    $quantities = $_POST['quantity'];
+    $supplierPrices = $_POST['supplierPrice'];
+    $sellPrices = $_POST['sellPrice'];
+    $expiryDates = $_POST['expiryDate'];
+    $totalCosts = $_POST['totalCost'];
 
     
     if (!empty($batchNos)) {
@@ -94,9 +82,9 @@ if (isset($_POST['purchaseBtn'])) {
                 } else {
                     echo "Error updating record: " . $db->error . "<br>";
                 }
-            }else{
+            } else {
                 // Prepare and execute the SQL query
-                    $stmt = $db->prepare("
+                $stmt = $db->prepare("
                     INSERT INTO medicine_stock (
                         batch_no, 
                         medicine_id, 
@@ -106,15 +94,23 @@ if (isset($_POST['purchaseBtn'])) {
                         expire_date,
                         purchase_invoice
                     ) 
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
                 ");
-                $stmt->bind_param("siidds", $batchNo, $medicineId, $quantity, $supplierPrice, $sellPrice, $expiryDate,$invoice_number);
+                $stmt->bind_param("siiddss", $batchNo, $medicineId, $quantity, $supplierPrice, $sellPrice, $expiryDate, $invoice_number);
 
                 if ($stmt->execute()) {
                     echo "Record inserted successfully for batch: $batchNo<br>";
                 } else {
                     echo "Error: " . $stmt->error . "<br>";
                 }
+
+                // purchase_qunatity data insert in table 
+                $purchaseSqlQuntity = "
+                    INSERT INTO purchase_quantity 
+                    (medicine_id, quantity, per_price, total_cost, purchase_invoice) 
+                    VALUES ('$medicineId', '$quantity', '$supplierPrice', '$totalCost', '$invoice_number')
+                ";
+                $db->query($purchaseSqlQuntity);
             }
 
         }

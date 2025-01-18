@@ -66,16 +66,16 @@ $result->close();
     </div>
     <div class="row">
     
-       <div class="mt-5 d-flex justify-content-center">
+       <div class="mt-5 d-flex justify-content-center px-5">
         
-       <div class="col-md-6">
+       <div class="col-md-6 me-3">
             <h5 class="text-success fw-bold">BILLING FROM</h5>
             <p class="mb-1 fst-italic">Supplier Name: <?php echo htmlspecialchars($supplier_name); ?></p>
             <p class="mb-1 fst-italic">Company: <?php echo htmlspecialchars($supplierCompany); ?></p>
             <p class="mb-1 fst-italic">Mobile: <?php echo htmlspecialchars($supplierMobile); ?></p>
             <p class="mb-1 fst-italic fw-semibold">invoice : <?php echo $invoice;?></p>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 text-end">
             <h5 class="text-success fw-bold">BILLING TO</h5>
             <p class="mb-1 fst-italic">Pharmanest medicine</p>
             <p class="mb-1 fst-italic">Dhanmondi 27 state</p>
@@ -91,33 +91,59 @@ $result->close();
             <tr>
                 <th>SL</th>
                 <th>Name</th>
-                <th>QTY PCS</th>
-                <th>Pcs Price</th>
+                <th>Quantity (pcs)</th>
+                <th>Price (pcs)</th>
                 <th>Total Price</th>
-                <th>Total Amount</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>napa (1)</td>
-                <td>500 boxes, 15000 pieces</td>
-                <td>900.00</td>
-                <td>0.00</td>
-                <td>90.00</td>
-                <td>0.00</td>
-                <td>45000.00</td>
-            </tr>
+        <!-- displaying purchase list medicine table  -->
+            <?php
+                    
+                    $purchase_list = $db->query("SELECT * FROM purchase_quantity WHERE purchase_invoice = $invoice");
+                    if($purchase_list->num_rows > 0){
+                      $counter = 1;
+                      while (list($id,$medicine_id,$quantity,$per_price,$total_cost,$purh_invoice) = $purchase_list->fetch_row()) {
+
+
+                        // get medicine name from supplier_ad table 
+                        $mediSql = "SELECT * FROM medicines WHERE id = $medicine_id";
+                        $rowMedicine = $db->query($mediSql);
+                        $getMedicine = $rowMedicine->fetch_assoc();
+                        $medicine_name = $getMedicine['m_name'];
+
+                              echo "<tr>
+                              <td>$counter</td>
+                              <td>$medicine_name</td>
+                              <td>$quantity</td>
+                              <td>$per_price</td>
+                              <td>$total_cost</td>
+                             
+                              
+                          </tr>";
+                          $counter++;
+                          
+                          
+                      }
+                    }else{
+                      echo "
+                      <p class='text-center text-muted bg-light py-3 rounded border'>
+                        <i class='bi bi-info-circle me-2'></i> No purchase  available at the moment.
+                      </p>
+                          ";
+                    }
+                    
+                
+            ?>
         </tbody>
+       
     </table>
 
-    <div class="row">
-        <div class="col-md-6">
-            <h5>Summary</h5>
-            <p>Sub Total: 45,000.00</p>
-            <p>Grand Total: 45,000.00</p>
-            <p>Paid Amount: 45,000.00</p>
-        </div>
+    <div class="row mt-0">
+        <div class="col-md-6"></div>
+        <div class="col-md-6 text-end px-5"> <table class="table table-bordered"> <tbody> <tr> <th>Sub Total</th> <td><?php echo $total_amount;?></td> </tr> <tr> <th>Discount</th> <td><?php echo $discount;?></td> </tr> <tr> <th>Receive Amount</th> <td><?php echo $receive_amount;?></td> </tr> <tr> <th>Due Amount</th> <td><?php echo $due_amount;?></td> </tr> </tbody> </table> </div>
     </div>
+    
 </div>
 </main>
 

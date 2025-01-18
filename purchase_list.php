@@ -14,7 +14,14 @@ $result = $db->query($sql);
 ?>
 <main class="app-main">
     <div class="container mt-2 mb-5 py-5">
-        <h2>Purchase List</h2>
+    <div class="d-flex justify-content-between">
+        <h2 class="">Purchase Details</h2>
+            <div>
+            <a href="add_purchase.php" class="btn btn-success d-block my-2" role="button">
+        Add New purchase
+        </a>
+            </div>
+        </div>
     <table class="table table-striped table-bordered align-middle">
             <thead class="table-success">
                 <tr>

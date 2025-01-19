@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 18, 2025 at 08:32 PM
+-- Generation Time: Jan 19, 2025 at 08:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -151,8 +151,10 @@ CREATE TABLE `medicine_stock` (
 --
 
 INSERT INTO `medicine_stock` (`id`, `batch_no`, `medicine_id`, `quantity`, `supp_price`, `sell_price`, `expire_date`, `purchase_invoice`) VALUES
-(7, '2323ds', 5, 200, 2.00, 3.00, '2025-12-19', 77672540),
-(8, 'im2372', 10, 300, 12.00, 15.00, '2027-06-19', 77672540);
+(18, 'NAP323', 5, 300, 1.00, 3.00, '2025-11-19', 42811653),
+(19, 'AME321', 10, 400, 12.00, 7.00, '2027-07-19', 42811653),
+(20, 'AMO342', 11, 500, 5.00, 15.00, '2026-07-19', 42811653),
+(21, 'AZI345', 13, 200, 20.00, 22.00, '2027-12-19', 51555220);
 
 -- --------------------------------------------------------
 
@@ -215,7 +217,8 @@ CREATE TABLE `purchase_details` (
 --
 
 INSERT INTO `purchase_details` (`id`, `invoice`, `supp_name`, `purch_date`, `total_amount`, `discount`, `receive_amount`, `due_amount`, `status`) VALUES
-(12, 77672540, 6, '2025-01-18', 4000.00, 5, 3000.00, 800.00, 2);
+(18, 42811653, 6, '2025-01-19', 7600.00, 0, 7600.00, 0.00, 0),
+(19, 51555220, 7, '2025-01-19', 4000.00, 0, 4000.00, 0.00, 0);
 
 -- --------------------------------------------------------
 
@@ -229,16 +232,21 @@ CREATE TABLE `purchase_quantity` (
   `quantity` int(10) NOT NULL,
   `per_price` double(10,2) NOT NULL,
   `total_cost` double(10,2) NOT NULL,
-  `purchase_invoice` int(15) NOT NULL
+  `purchase_invoice` int(15) NOT NULL,
+  `batch_no` varchar(100) DEFAULT NULL,
+  `sell_price` double(10,2) DEFAULT NULL,
+  `expire_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `purchase_quantity`
 --
 
-INSERT INTO `purchase_quantity` (`id`, `medicine_id`, `quantity`, `per_price`, `total_cost`, `purchase_invoice`) VALUES
-(5, 5, 200, 2.00, 400.00, 77672540),
-(6, 10, 300, 12.00, 3600.00, 77672540);
+INSERT INTO `purchase_quantity` (`id`, `medicine_id`, `quantity`, `per_price`, `total_cost`, `purchase_invoice`, `batch_no`, `sell_price`, `expire_date`) VALUES
+(16, 5, 300, 1.00, 300.00, 42811653, 'NAP323', 3.00, '2025-11-19'),
+(17, 11, 400, 12.00, 4800.00, 42811653, 'AMO342', 15.00, '2026-07-19'),
+(18, 10, 500, 5.00, 2500.00, 42811653, 'AME321', 7.00, '2027-07-19'),
+(19, 13, 200, 20.00, 4000.00, 51555220, 'AZI345', 22.00, '2027-12-19');
 
 -- --------------------------------------------------------
 
@@ -393,7 +401,7 @@ ALTER TABLE `medicines`
 -- AUTO_INCREMENT for table `medicine_stock`
 --
 ALTER TABLE `medicine_stock`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `medicine_type`
@@ -405,13 +413,13 @@ ALTER TABLE `medicine_type`
 -- AUTO_INCREMENT for table `purchase_details`
 --
 ALTER TABLE `purchase_details`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `purchase_quantity`
 --
 ALTER TABLE `purchase_quantity`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `supplier_add`

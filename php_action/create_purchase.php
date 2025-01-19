@@ -69,8 +69,8 @@ if (isset($_POST['purchaseBtn'])) {
                 // purchase_qunatity data insert in table 
                 $purchaseSqlQuntity = "
                     INSERT INTO purchase_quantity 
-                    (medicine_id, quantity, per_price, total_cost, purchase_invoice) 
-                    VALUES ('$medicineId', '$quantity', '$supplierPrice', '$totalCost', '$invoice_number')
+                    (medicine_id, quantity, per_price, total_cost, purchase_invoice, batch_no,sell_price,expire_date) 
+                    VALUES ('$medicineId', '$quantity', '$supplierPrice', '$totalCost', '$invoice_number', '$batchNo','$sellPrice','$expiryDate')
                 ";
                 $db->query($purchaseSqlQuntity);
 
@@ -107,8 +107,8 @@ if (isset($_POST['purchaseBtn'])) {
                 // purchase_qunatity data insert in table 
                 $purchaseSqlQuntity = "
                     INSERT INTO purchase_quantity 
-                    (medicine_id, quantity, per_price, total_cost, purchase_invoice) 
-                    VALUES ('$medicineId', '$quantity', '$supplierPrice', '$totalCost', '$invoice_number')
+                    (medicine_id, quantity, per_price, total_cost, purchase_invoice, batch_no,sell_price,expire_date) 
+                    VALUES ('$medicineId', '$quantity', '$supplierPrice', '$totalCost', '$invoice_number', '$batchNo','$sellPrice','$expiryDate')
                 ";
                 $db->query($purchaseSqlQuntity);
             }

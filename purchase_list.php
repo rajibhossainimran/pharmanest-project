@@ -6,7 +6,10 @@
 <!--navber and sideber part start-->
 <?php include("./pages/common_pages/navber.php"); ?>
 <?php include("./pages/common_pages/sidebar.php"); ?>
-
+<?php 
+$message_delete = isset($_GET['message_delete']) ? $_GET['message_delete'] : null;
+$type = isset($_GET['type']) ? $_GET['type'] : null;
+?>
 <?php
 // Query to fetch data
 $sql = "SELECT * FROM medicines";
@@ -22,6 +25,18 @@ $result = $db->query($sql);
         </a>
             </div>
         </div>
+            <!-- display error message  -->
+      <?php
+        if (isset($_SESSION['success'])) {
+            echo "<p id='message' style='color: green;font-size: 30px;background-color: lightgreen; text-align: center; padding-left: 20px; padding-right: 20px; margin-left: 10px; margin-right: 10px;'>" . htmlspecialchars($_SESSION['success']) . "</p>";
+            unset($_SESSION['success']); // Clear the message after displaying it
+        }
+        
+        if (isset($_SESSION['error'])) {
+            echo "<p id='message' style='color: red;font-size: 30px;background-color: lightred; text-align: center; padding-left: 20px; padding-right: 20px; margin-left: 10px; margin-right: 10px;'>" . htmlspecialchars($_SESSION['error']) . "</p>";
+            unset($_SESSION['error']); // Clear the message after displaying it
+        }
+        ?>
     <table class="table table-striped table-bordered align-middle">
             <thead class="table-success">
                 <tr>
@@ -72,7 +87,7 @@ $result = $db->query($sql);
                                     <i class='bi bi-eye'></i>
                                     </a>
 
-                                  <a href='#' 
+                                  <a href='edit_purchase_form.php?id=$id' 
                                   class='btn btn-primary btn-sm text-white me-2' 
                                   data-bs-toggle='tooltip' 
                                   title='Edit'>
@@ -93,7 +108,7 @@ $result = $db->query($sql);
                     }else{
                       echo "
                       <p class='text-center text-muted bg-light py-3 rounded border'>
-                        <i class='bi bi-info-circle me-2'></i> No categories available at the moment.
+                        <i class='bi bi-info-circle me-2'></i> No purchase available at the moment.
                       </p>
                           ";
                     }
@@ -105,6 +120,15 @@ $result = $db->query($sql);
 
    
     </div>
+    <script>
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+        const messageElement = document.getElementById('message');
+        if (messageElement) {
+            messageElement.style.display = 'none';
+        }
+    }, 2000);
+</script>
 </main>
 <?php include("./pages/common_pages/footer.php"); ?>
 <?php

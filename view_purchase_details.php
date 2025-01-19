@@ -57,7 +57,18 @@ $result->close();
 
 
 <main class="app-main">
-    
+     <div class="d-flex justify-content-around">
+           <div>
+            <a href="add_purchase.php" class="btn btn-success d-block my-2" role="button">
+        Add purchase
+        </a>
+            </div>
+            <div>
+            <a href="purchase_list.php" class="btn btn-success d-block my-2" role="button">
+        Vew Purchase List
+        </a>
+            </div>
+    </div>
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12 d-flex justify-content-center">
@@ -141,7 +152,7 @@ $result->close();
 
     <div class="row mt-0">
         <div class="col-md-6"></div>
-        <div class="col-md-6 text-end px-5"> <table class="table table-bordered"> <tbody> <tr> <th>Sub Total</th> <td><?php echo $total_amount;?></td> </tr> <tr> <th>Discount</th> <td><?php echo $discount;?></td> </tr> <tr> <th>Receive Amount</th> <td><?php echo $receive_amount;?></td> </tr> <tr> <th>Due Amount</th> <td><?php echo $due_amount;?></td> </tr> </tbody> </table> </div>
+        <div class="col-md-6 text-end px-5"> <table class="table table-bordered"> <tbody> <tr> <th>Sub Total</th> <td><?php echo $total_amount;?></td> </tr> <tr> <th>Discount</th> <td><?php echo $discount;?>%</td> </tr> <tr> <th>Receive Amount</th> <td><?php echo $receive_amount;?></td> </tr> <tr> <th>Due Amount</th> <td><?php echo $due_amount;?></td> </tr> </tbody> </table> </div>
     </div>
     
 </div>

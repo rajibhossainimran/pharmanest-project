@@ -139,10 +139,10 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="./widgets/small-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                <li class="nav-item"> <a href="add_customer.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Add Customer</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                <li class="nav-item"> <a href="customer_list.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Customer List</p>
                                     </a> </li>
                             </ul>

@@ -79,6 +79,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                 <thead class="table-success">
                     <tr>
                         <th scope="col">Medicine Name</th>
+                        <th scope="col">Available Qtn</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">Price (pcs)</th>
                         <th scope="col">Total Cost</th>
@@ -87,8 +88,8 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                 </thead>
                 <tbody>
                     <tr>
-                        <td><select class="form-control" name="medicineName[]" required>
-                            <option value="">--Select medicine--</option>
+                        <td><select class="medicine-select form-control" name="medicineName[]" required>
+                            <option value="" disabled selected>--Select medicine--</option>
                             <?php
                                 $medicineList = $db->query("SELECT * FROM medicines");
                                 while (list($_sid, $_sname) = $medicineList->fetch_row()) {
@@ -96,9 +97,10 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                                 }
                             ?>
                             </select></td>
+                            <td><input type="number" class="form-control" name="availableQuantity[]" placeholder="0" required readonly></td>
                         <td><input type="number" class="form-control" name="quantity[]" placeholder="0" required></td>
 
-                        <td><input type="number" class="form-control" name="supplierPrice[]" placeholder="00.0" required></td>
+                        <td><input type="number" class="price-field form-control" name="supplierPrice[]" placeholder="00.0" required></td>
                         
                         <td><input type="number" class="form-control" name="totalCost[]" placeholder="00.0" required></td>
                         <td>
@@ -159,6 +161,11 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
 </div>
 </main>
 
+<!-- jquery downloaded  -->
+ <script src="./bootstrap/jquery/jquery-3.7.1.min.js
+ "></script>
+
+
 <!-- calculation part start  -->
 <script>
     // Calculate the payable amount
@@ -212,92 +219,104 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
     });
 
     // Function to add a new row to the medicine table
+
     function addMedicineRow() {
-        const table = document.getElementById('medicineTable').getElementsByTagName('tbody')[0];
-        const newRow = table.insertRow();
+    const table = document.getElementById('medicineTable').getElementsByTagName('tbody')[0];
+    const newRow = table.insertRow();
 
-        // Medicine Name
-        const cell2 = newRow.insertCell(0);
-        const select2 = document.createElement('select');
-        select2.className = 'form-control';
-        select2.name = 'medicineName[]';
-        select2.required = true;
+    // Medicine Name
+    const cell1 = newRow.insertCell(0);
+    const select1 = document.createElement('select');
+    select1.className = 'medicine-select form-control';
+    select1.name = 'medicineName[]';
+    select1.required = true;
 
-        // Add placeholder option
-        const placeholderOption = document.createElement('option');
-        placeholderOption.textContent = 'Select medicine';
-        placeholderOption.value = '';
-        placeholderOption.disabled = true;
-        placeholderOption.selected = true;
-        select2.appendChild(placeholderOption);
+    // Add placeholder option
+    const placeholderOption = document.createElement('option');
+    placeholderOption.textContent = 'Select medicine';
+    placeholderOption.value = '';
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    select1.appendChild(placeholderOption);
 
-        // fetch data 
-        fetch('php_action/api_medicines.php')
-        .then(response => response.json()) 
-        .then(data => {
-            data.forEach(supplier => {
+    // Fetch medicine data
+    fetch('php_action/api_medicines.php')
+        .then((response) => response.json())
+        .then((data) => {
+            data.forEach((medicine) => {
                 const option = document.createElement('option');
-                option.value = supplier.id;
-                option.textContent = supplier.m_name;
-                console.log(supplier.m_name, supplier.id);
-                select2.appendChild(option);
+                option.value = medicine.id;
+                option.textContent = medicine.m_name;
+                select1.appendChild(option);
             });
+        })
+        .catch((error) => {
+            console.error('Error fetching medicines:', error);
+            alert('Failed to load medicines. Please try again.');
         });
-        cell2.appendChild(select2);
+    cell1.appendChild(select1);
 
-        // Quantity
-        const cell3 = newRow.insertCell(1);
-        const input3 = document.createElement('input');
-        input3.type = 'number';
-        input3.className = 'form-control';
-        input3.name = 'quantity[]';
-        input3.placeholder = '0';
-        input3.required = true;
-        input3.addEventListener('input', () => {
-            calculateTotalCost(newRow);
-            calculateSubAmount();
-        });
-        cell3.appendChild(input3);
+    // Available Quantity
+    const cell2 = newRow.insertCell(1);
+    const input2 = document.createElement('input');
+    input2.type = 'number';
+    input2.className = 'form-control available-quantity';
+    input2.name = 'availableQuantity[]';
+    input2.placeholder = '0';
+    input2.readOnly = true; 
+    cell2.appendChild(input2);
 
-        // Supplier Price
-        const cell4 = newRow.insertCell(2);
-        const input4 = document.createElement('input');
-        input4.type = 'number';
-        input4.className = 'form-control';
-        input4.name = 'supplierPrice[]';
-        input4.placeholder = '00.0';
-        input4.required = true;
-        input4.addEventListener('input', () => {
-            calculateTotalCost(newRow);
-            calculateSubAmount();
-        });
-        cell4.appendChild(input4);
+    // Quantity
+    const cell3 = newRow.insertCell(2);
+    const input3 = document.createElement('input');
+    input3.type = 'number';
+    input3.className = 'form-control quantity-input';
+    input3.name = 'quantity[]';
+    input3.placeholder = '0';
+    input3.required = true;
+    input3.addEventListener('input', () => {
+        calculateTotalCost(newRow);
+        calculateSubAmount();
+    });
+    cell3.appendChild(input3);
 
+    // Supplier Price
+    const cell4 = newRow.insertCell(3);
+    const input4 = document.createElement('input');
+    input4.type = 'number';
+    input4.className = 'price-field form-control supplier-price';
+    input4.name = 'supplierPrice[]';
+    input4.placeholder = '00.0';
+    input4.required = true;
+    input4.addEventListener('input', () => {
+        calculateTotalCost(newRow);
+        calculateSubAmount();
+    });
+    cell4.appendChild(input4);
 
-        // Total Cost
-        const cell7 = newRow.insertCell(3);
-        const input7 = document.createElement('input');
-        input7.type = 'number';
-        input7.className = 'form-control';
-        input7.name = 'totalCost[]';
-        input7.placeholder = '00.0';
-        input7.readOnly = true; // Make this field read-only
-        input7.required = true;
-        cell7.appendChild(input7);
+    // Total Cost
+    const cell5 = newRow.insertCell(4);
+    const input5 = document.createElement('input');
+    input5.type = 'number';
+    input5.className = 'form-control total-cost';
+    input5.name = 'totalCost[]';
+    input5.placeholder = '00.0';
+    input5.readOnly = true; // Make this field read-only
+    cell5.appendChild(input5);
 
-        // Remove Button
-        const cell8 = newRow.insertCell(4);
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'btn btn-danger btn-sm';
-        button.innerHTML = '<i class="bi bi-trash"></i>';
-        button.onclick = function () {
-            removeMedicineRow(button);
-            calculateSubAmount();
-        };
-        cell8.appendChild(button);
-    }
+    // Remove Button
+    const cell6 = newRow.insertCell(5);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-danger btn-sm';
+    button.innerHTML = '<i class="bi bi-trash"></i>';
+    button.addEventListener('click', () => {
+        removeMedicineRow(button);
+        calculateSubAmount();
+    });
+    cell6.appendChild(button);
 
+}
     // Function to remove a row from the medicine table
     function removeMedicineRow(button) {
         const row = button.closest('tr'); // Find the closest table row to the clicked button
@@ -366,6 +385,51 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         }
     }, 1000);
 </script>
+<!-- fatching data jquery method fetch one -->
+ <script>
+document.addEventListener('change', (event) => {
+    if (event.target.classList.contains('medicine-select')) {
+        const select = event.target;
+        const row = select.closest('tr');
+        const medicineId = select.value;
+        const priceField = row.querySelector('.price-field');
+        const quantityField = row.querySelector('input[name="availableQuantity[]"]');
+
+        if (medicineId) {
+            fetch('./php_action/api_get_medicine_price.php?medicine_id=' + medicineId)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.sell_price !== undefined && data.quantity !== undefined) {
+                        priceField.value = data.sell_price; // Set price
+                        quantityField.value = data.quantity; // Set available quantity
+                    } else if (data.error) {
+                        alert(data.error);
+                        priceField.value = '0.0'; // Fallback price
+                        quantityField.value = '0'; // Fallback quantity
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching medicine details:', error);
+                    alert('Failed to fetch data. Please try again.');
+                    priceField.value = '0.0';
+                    quantityField.value = '0';
+                });
+        } else {
+            priceField.value = '';
+            quantityField.value = '';
+        }
+    }
+});
+
+// Event delegation for input fields (quantity and price) to calculate total
+document.addEventListener('input', (event) => {
+    if (event.target.matches('.price-field, input[name="quantity[]"]')) {
+        const row = event.target.closest('tr');
+        calculateTotalCost(row);
+        calculateSubAmount();
+    }
+});
+ </script>
 
 </main>
 <!-- main part end -->

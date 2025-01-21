@@ -36,14 +36,14 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
             unset($_SESSION['error']); // Clear the message after displaying it
         }
         ?>
-    <form method="POST" id="purchaseBtnSubmit" action="./php_action/create_purchase.php" enctype="multipart/form-data">
+    <form method="POST" id="purchaseBtnSubmit" action="./php_action/create_new_sell.php" enctype="multipart/form-data">
         <!-- Supplier Information -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="supplierName" class="form-label">Customer Name:</label>
                     <select class="form-control" id="medicineSupplier" name="medicine_supplier">
-                        <option value="Customer">Customer</option>
+                        <option value="0">Customer</option>
                         <?php
                             $supplierclist = $db->query("SELECT * FROM customer");
                             while (list($_id, $_sname) = $supplierclist->fetch_row()) {
@@ -152,7 +152,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         <div class="row ">
             <div class="col-4"></div>
             <div class="col-4 text-center">
-            <button type="submit" class="btn btn-success" name="purchaseBtn">Submit</button>
+            <button type="submit" class="btn btn-success" name="sellBtn">Submit</button>
 
             </div>
             <div class="col-4"></div>

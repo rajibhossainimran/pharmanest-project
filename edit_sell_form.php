@@ -7,59 +7,92 @@
 <!--navber and sideber part start-->
 <?php include("./pages/common_pages/navber.php");?>
 <?php include("./pages/common_pages/sidebar.php");?>
-<?php 
-$message_delete = isset($_GET['message_delete']) ? $_GET['message_delete'] : null;
-$type = isset($_GET['type']) ? $_GET['type'] : null;
-?>
+<?php
 
+$id = intval($_GET['id']); 
+
+$purchaseDetailSql = "SELECT * FROM sell_details WHERE id = $id";
+
+$result = $db->query($purchaseDetailSql);
+
+if ($result->num_rows > 0) {
+
+    $row = $result->fetch_assoc();
+
+    $invoice = $row['invoice'];
+    $supp_id= $row['customer_name'];
+    $purchase_date = $row['sell_date'];
+    $total_amount = $row['total_amount'];
+    $discount = $row['discount'];
+    $receive_amount = $row['receive_amount'];
+    $due_amount = $row['due_amount'];
+    $paymentStatus = $row['status'];
+
+    
+} else {
+    echo "No records found for ID: $id";
+}
+
+// Close the result set
+$result->close();
+?>
+<?php 
+    // Fetch supplier details
+    $supplierSql = "SELECT * FROM customer WHERE id = $supp_id";
+    $rowSupplier = $db->query($supplierSql);
+
+    if ($rowSupplier->num_rows > 0) {
+        $getSupplier = $rowSupplier->fetch_assoc();
+        $supplier_name = $getSupplier['customer_name'];
+        $supplierCompany = $getSupplier['phone'];
+    } else {
+        $supplier_name = "Not Found";
+        $supplierCompany = "Not Found";
+    }
+?>
 
 
 <main class="app-main">
 <div class="container mt-2 mb-5">
     <div class="d-flex justify-content-between">
-        <h2 class="">Add New sell</h2>
+        <h2 class="">Edit Purchase</h2>
             <div>
             <a href="sell_list.php" class="btn btn-success d-block my-2" role="button">
-        View sell Lists
+        Sells Lists
         </a>
             </div>
         </div>
-      <!-- display error message  -->
-      <?php
-        if (isset($_SESSION['success'])) {
-            echo "<p id='message' style='color: green;font-size: 30px;background-color: lightgreen; text-align: center; padding-left: 20px; padding-right: 20px; margin-left: 10px; margin-right: 10px;'>" . htmlspecialchars($_SESSION['success']) . "</p>";
-            unset($_SESSION['success']); // Clear the message after displaying it
-        }
-        
-        if (isset($_SESSION['error'])) {
-            echo "<p id='message' style='color: red;font-size: 30px;background-color: lightred; text-align: center; padding-left: 20px; padding-right: 20px; margin-left: 10px; margin-right: 10px;'>" . htmlspecialchars($_SESSION['error']) . "</p>";
-            unset($_SESSION['error']); // Clear the message after displaying it
-        }
-        ?>
-    <form method="POST" id="purchaseBtnSubmit" action="./php_action/create_new_sell.php" enctype="multipart/form-data">
+  
+    <form method="POST" id="purchaseBtnSubmit" action="./php_action/edit_sell.php?update=<?php echo $id;?>" enctype="multipart/form-data">
         <!-- Supplier Information -->
         <div class="row mb-4">
-            <div class="col-md-6">
+        <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="supplierName" class="form-label">Customer Name:</label>
+                    <label for="supplierName" class="form-label">Supplier Name:</label>
                     <select class="form-control" id="medicineSupplier" name="medicine_supplier">
-                        <option value="2">Customer</option>
+                    <option value="<?php echo $supp_id;?>"><?php echo $supplier_name;?></option>
                         <?php
                             $supplierclist = $db->query("SELECT * FROM customer");
-                            while (list($_id, $_sname) = $supplierclist->fetch_row()) {
-                                echo "<option value='$_id'>$_sname</option>";
+                            while (list($_sid, $_sname) = $supplierclist->fetch_row()) {
+                                echo "<option value='$_sid'>$_sname</option>";
                             }
                         ?>
                     </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+               <div class="mb-3">
+                    <label for="invoice" class="form-label">Invoice Number:</label>
+                    <input type="text" name="invoice_number" class="form-control" id="randomNumber" value="<?php echo $invoice;?>" readonly>
                 </div>
             </div>
         </div>
 
         <div class="row mb-4">
             <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="purchaseDate" class="form-label">Sells Date:</label>
-                    <input type="date" name="purchase_date" class="form-control" id="purchaseDate" required value="<?php echo date('Y-m-d'); ?>">
+            <div class="mb-3">
+                    <label for="purchaseDate" class="form-label">Purchase Date:</label>
+                    <input type="date" name="purchase_date" class="form-control" id="purchaseDate" required value="<?php echo $purchase_date; ?>">
                 </div>
             </div>
         </div>
@@ -72,73 +105,104 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
             <table class="table table-bordered table-hover text-center align-middle" id="medicineTable">
                 <thead class="table-success">
                     <tr>
+
                         <th scope="col">Medicine Name</th>
-                        <th scope="col">Available Qtn</th>
                         <th scope="col">Quantity</th>
-                        <th scope="col">Price (pcs)</th>
                         <th scope="col">Total Cost</th>
-                        <th scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td><select class="medicine-select form-control" name="medicineName[]" required>
-                            <option value="" disabled selected>--Select medicine--</option>
-                            <?php
-                                $medicineList = $db->query("SELECT * FROM medicines");
-                                while (list($_sid, $_sname) = $medicineList->fetch_row()) {
-                                    echo "<option value='$_sid'>$_sname</option>";
-                                }
-                            ?>
-                            </select></td>
-                            <td><input type="number" class="form-control" name="availableQuantity[]" placeholder="0" required readonly></td>
-                        <td><input type="number" class="form-control" name="quantity[]" placeholder="0" required></td>
 
-                        <td><input type="number" class="price-field form-control" name="supplierPrice[]" placeholder="00.0" required></td>
-                        
-                        <td><input type="number" class="form-control" name="totalCost[]" placeholder="00.0" required></td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="removeMedicineRow(this)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
+                <tbody>
+                <?php
+    $purchase_list = $db->query("SELECT * FROM sell_quantity WHERE sell_invoice = $invoice");
+    if ($purchase_list->num_rows > 0) {
+        while (list($id, $medicine_id, $quantity, $total_price, $qtnpurchase_invoice) = $purchase_list->fetch_row()) {
+
+            // Get medicine name from medicines table 
+            $mediSql = "SELECT * FROM medicines WHERE id = $medicine_id";
+            $rowMedicine = $db->query($mediSql);
+            $getMedicine = $rowMedicine->fetch_assoc();
+            $medicine_name = $getMedicine['m_name'];
+
+            echo "
+            <tr>
+                <td>
+                    <select class='form-control' name='medicineName[]' required>
+                        <option value='{$medicine_id}'>{$medicine_name}</option>";
+
+            // PHP block for fetching medicines from the database
+            $supplierclist = $db->query("SELECT * FROM medicines");
+            while (list($_sid, $_sname) = $supplierclist->fetch_row()) {
+                echo "<option value='{$_sid}'>{$_sname}</option>";
+            }
+
+            echo "
+                    </select>
+                </td>
+                <td>
+                    <input type='number' class='form-control' name='quantity[]' value='{$quantity}' readonly required>
+                </td>
+                <td>
+                    <input type='number' class='form-control' name='totalCost[]' value='{$total_price}' readonly required>
+                </td>
+            </tr>";
+        }
+    } else {
+        echo "
+        <p class='text-center text-muted bg-light py-3 rounded border'>
+            <i class='bi bi-info-circle me-2'></i> No purchase available at the moment.
+        </p>";
+    }
+    ?>
+
                 </tbody>
             </table>
         </div>
 
-        <button title="add medicine" type="button" class="btn btn-primary" onclick="addMedicineRow()"><i class="bi bi-plus-square"></i></button>
+        <!-- <button title="add medicine" type="button" class="btn btn-primary" onclick="addMedicineRow()"><i class="bi bi-plus-square"></i></button> -->
 
         <!-- Payment Information -->
         <div class="row">
-            <div class="col-md-6"></div>
             <div class="col-md-6">
-                <div class="mb-3">
+            <div class="mb-3">
                     <label for="subAmount" class="form-label">Sub Amount:</label>
-                    <input type="number" class="form-control" id="subAmount" placeholder="00.0" required>
+                    <input type="number" value="<?php echo $total_amount;?>"  class="form-control" id="subAmount" placeholder="00.0" required>
                 </div>
-                <div class="mb-3">
-                    <label for="discount" class="form-label">Discount:</label>
-                    <input type="number" name="discount" class="form-control" id="discount" placeholder="%">
-                </div>
+                
                 <div class="mb-3">
                     <label for="payableAmount" class="form-label">Payable Amount:</label>
                     <input type="number" class="form-control" id="payableAmount" name="totalPayAmount" required>
                 </div>
                 <div class="mb-3">
+                    <label for="discount" class="form-label">Discount:</label>
+                    <input type="number" value="<?php echo $discount;?>" name="discount" class="form-control" id="discount" placeholder="%">
+                </div>
+            </div>
+            <div class="col-md-6">
+                
+               
+                
+                <div class="mb-3">
                     <label for="receivedAmount" class="form-label">Received Amount:</label>
-                    <input type="number" name="received_amount" class="form-control" id="receivedAmount" placeholder="Enter Amount">
+                    <input type="number" value="<?php echo $receive_amount;?>" name="received_amount" class="form-control" id="receivedAmount" placeholder="Enter Amount">
                 </div>
                 <div class="mb-3">
-                    <label for="dueAmount" class="form-label">Due Amount:</label>
-                    <input type="number" name="due_amount" class="form-control" id="dueAmount" required>
+                    <label for="dueAmount"  class="form-label">Due Amount:</label>
+                    <input type="number" value="<?php echo $due_amount;?>" name="due_amount" class="form-control" id="dueAmount" required>
                 </div>
                 <div class="mb-3">
                     <label for="paymentStatus" class="form-label">Payment Status:</label>
                     <select class="form-control" id="paymentStatus" name="status">
-                        <option value="0">Paid</option>
-                        <option value="1">Unpaid</option>
-                        <option value="2">Partially Paid</option>
+                       
+                        <option value="0" <?php 
+                         if($paymentStatus=="0") 
+                            { echo "selected";}?>>Paid</option>
+                        <option value="1" <?php 
+                         if($paymentStatus=="1") 
+                            { echo "selected";}?>>Unpaid</option>
+                        <option value="2" <?php 
+                         if($paymentStatus=="2") 
+                            { echo "selected";}?>>Partially Paid</option>
                     </select>
                 </div>
             </div>
@@ -146,7 +210,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         <div class="row ">
             <div class="col-4"></div>
             <div class="col-4 text-center">
-            <button type="submit" class="btn btn-success" name="sellBtn">Submit</button>
+            <button type="submit" class="btn btn-success" name="update">Update Now</button>
 
             </div>
             <div class="col-4"></div>
@@ -154,11 +218,6 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
     </form>
 </div>
 </main>
-
-<!-- jquery downloaded  -->
- <script src="./bootstrap/jquery/jquery-3.7.1.min.js
- "></script>
-
 
 <!-- calculation part start  -->
 <script>
@@ -213,7 +272,6 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
     });
 
     // Function to add a new row to the medicine table
-
     function addMedicineRow() {
     const table = document.getElementById('medicineTable').getElementsByTagName('tbody')[0];
     const newRow = table.insertRow();
@@ -234,21 +292,21 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
     select1.appendChild(placeholderOption);
 
     // Fetch medicine data
-    fetch('php_action/api_medicines.php')
-        .then((response) => response.json())
-        .then((data) => {
-            data.forEach((medicine) => {
-                const option = document.createElement('option');
-                option.value = medicine.id;
-                option.textContent = medicine.m_name;
-                select1.appendChild(option);
-            });
-        })
-        .catch((error) => {
-            console.error('Error fetching medicines:', error);
-            alert('Failed to load medicines. Please try again.');
-        });
-    cell1.appendChild(select1);
+    // fetch('php_action/api_medicines.php')
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //         data.forEach((medicine) => {
+    //             const option = document.createElement('option');
+    //             option.value = medicine.id;
+    //             option.textContent = medicine.m_name;
+    //             select1.appendChild(option);
+    //         });
+    //     })
+    //     .catch((error) => {
+    //         console.error('Error fetching medicines:', error);
+    //         alert('Failed to load medicines. Please try again.');
+    //     });
+    // cell1.appendChild(select1);
 
     // Available Quantity
     const cell2 = newRow.insertCell(1);
@@ -311,6 +369,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
     cell6.appendChild(button);
 
 }
+
     // Function to remove a row from the medicine table
     function removeMedicineRow(button) {
         const row = button.closest('tr'); // Find the closest table row to the clicked button
@@ -357,94 +416,6 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
         }
     });
 </script>
-
-<script>
-    // Function to generate a random 6-digit integer
-    function generateRandomSixDigitNumber() {
-        return Math.floor(Math.random() * 90000000) + 10000000; // Range: 100000 to 999999
-    }
-
-    // Function to check if the generated invoice number exists in the database
-    async function checkUniqueInvoiceNumber(invoiceNumber) {
-        try {
-            let response = await fetch(`check_invoice.php?invoice_number=${invoiceNumber}`);
-            let data = await response.json();
-            return data.exists;
-        } catch (error) {
-            console.error('Error checking invoice number uniqueness:', error);
-            return false;
-        }
-    }
-
-    // Generate a random number and check its uniqueness
-    async function generateUniqueInvoiceNumber() {
-        let randomNumber = generateRandomSixDigitNumber();
-
-        let isUnique = await checkUniqueInvoiceNumber(randomNumber);
-        while (!isUnique) {
-            randomNumber = generateRandomSixDigitNumber();
-            isUnique = await checkUniqueInvoiceNumber(randomNumber);
-        }
-
-        document.getElementById('randomNumber').value = randomNumber;
-    }
-
-    window.onload = generateUniqueInvoiceNumber;
-</script>
-<script>
-    // Hide the message after 3 seconds
-    setTimeout(() => {
-        const messageElement = document.getElementById('message');
-        if (messageElement) {
-            messageElement.style.display = 'none';
-        }
-    }, 1000);
-</script>
-<!-- fatching data jquery method fetch one -->
- <script>
-document.addEventListener('change', (event) => {
-    if (event.target.classList.contains('medicine-select')) {
-        const select = event.target;
-        const row = select.closest('tr');
-        const medicineId = select.value;
-        const priceField = row.querySelector('.price-field');
-        const quantityField = row.querySelector('input[name="availableQuantity[]"]');
-
-        if (medicineId) {
-            fetch('./php_action/api_get_medicine_price.php?medicine_id=' + medicineId)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.sell_price !== undefined && data.quantity !== undefined) {
-                        priceField.value = data.sell_price; // Set price
-                        quantityField.value = data.quantity; // Set available quantity
-                    } else if (data.error) {
-                        alert(data.error);
-                        priceField.value = '0.0'; // Fallback price
-                        quantityField.value = '0'; // Fallback quantity
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error fetching medicine details:', error);
-                    alert('Failed to fetch data. Please try again.');
-                    priceField.value = '0.0';
-                    quantityField.value = '0';
-                });
-        } else {
-            priceField.value = '';
-            quantityField.value = '';
-        }
-    }
-});
-
-// Event delegation for input fields (quantity and price) to calculate total
-document.addEventListener('input', (event) => {
-    if (event.target.matches('.price-field, input[name="quantity[]"]')) {
-        const row = event.target.closest('tr');
-        calculateTotalCost(row);
-        calculateSubAmount();
-    }
-});
- </script>
 
 </main>
 <!-- main part end -->

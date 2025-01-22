@@ -43,7 +43,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                 <div class="mb-3">
                     <label for="supplierName" class="form-label">Customer Name:</label>
                     <select class="form-control" id="medicineSupplier" name="medicine_supplier">
-                        <option value="0">Customer</option>
+                        <option value="">Customer</option>
                         <?php
                             $supplierclist = $db->query("SELECT * FROM customer");
                             while (list($_id, $_sname) = $supplierclist->fetch_row()) {
@@ -51,12 +51,6 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
                             }
                         ?>
                     </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="invoice" class="form-label">Invoice Number:</label>
-                    <input type="text" name="invoice_number" class="form-control" id="randomNumber" readonly>
                 </div>
             </div>
         </div>
@@ -367,14 +361,35 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
 <script>
     // Function to generate a random 6-digit integer
     function generateRandomSixDigitNumber() {
-        return Math.floor(Math.random() * 9000000000) + 1000000000; // Range: 100000 to 999999
+        return Math.floor(Math.random() * 90000000) + 10000000; // Range: 100000 to 999999
     }
 
-    // Generate a random number when the page loads
-    window.onload = function() {
-        const randomNumber = generateRandomSixDigitNumber();
+    // Function to check if the generated invoice number exists in the database
+    async function checkUniqueInvoiceNumber(invoiceNumber) {
+        try {
+            let response = await fetch(`check_invoice.php?invoice_number=${invoiceNumber}`);
+            let data = await response.json();
+            return data.exists;
+        } catch (error) {
+            console.error('Error checking invoice number uniqueness:', error);
+            return false;
+        }
+    }
+
+    // Generate a random number and check its uniqueness
+    async function generateUniqueInvoiceNumber() {
+        let randomNumber = generateRandomSixDigitNumber();
+
+        let isUnique = await checkUniqueInvoiceNumber(randomNumber);
+        while (!isUnique) {
+            randomNumber = generateRandomSixDigitNumber();
+            isUnique = await checkUniqueInvoiceNumber(randomNumber);
+        }
+
         document.getElementById('randomNumber').value = randomNumber;
-    };
+    }
+
+    window.onload = generateUniqueInvoiceNumber;
 </script>
 <script>
     // Hide the message after 3 seconds

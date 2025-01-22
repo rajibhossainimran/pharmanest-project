@@ -1,38 +1,50 @@
-<?php 
+<?php
 include_once "../config/config.php";
 session_start();
 
 if (isset($_POST['sellBtn'])) {
-    // Collect POST data
     $invoice_number = $_POST['invoice_number'];
-    $customer_id = $_POST['medicine_supplier'];
-    $sell_date = $_POST['purchase_date'];
+
+    // If invoice number is empty or not provided, generate a unique one
+    if (empty($invoice_number)) {
+        $invoice_number = generateUniqueInvoiceNumber();
+    }
+
+    $supplier_id = $_POST['medicine_supplier'];
+    $purchase_date = $_POST['purchase_date'];
     $total_amount = $_POST['total_amount'];
     $discount = $_POST['discount'];
     $received_amount = $_POST['received_amount'];
     $due_amount = $_POST['due_amount'];
     $status = $_POST['status'];
 
-    // Prepare and execute the sell_details query
+    // Insert into sell_details table
     $detail_sql = "
-        INSERT INTO sell_details (
-            invoice, 
-            customer_name, 
-            sell_date, 
-            total_amount, 
-            discount, 
-            receive_amount, 
-            due_amount, 
-            status
-        ) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO sell_details (
+        invoice, 
+        customer_name, 
+        sell_date, 
+        total_amount, 
+        discount, 
+        receive_amount, 
+        due_amount, 
+        status
+    ) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ";
+
     $stmt = $db->prepare($detail_sql);
+    if (!$stmt) {
+        $_SESSION['error'] = "Database error: " . $db->error;
+        header('location: ../add_new_sell.php');
+        exit();
+    }
+
     $stmt->bind_param(
-        "sssddddd", 
+        "sssdssss", 
         $invoice_number, 
-        $customer_id, 
-        $sell_date, 
+        $supplier_id, 
+        $purchase_date, 
         $total_amount, 
         $discount, 
         $received_amount, 
@@ -40,14 +52,15 @@ if (isset($_POST['sellBtn'])) {
         $status
     );
 
-    // Execute the prepared statement
     if (!$stmt->execute()) {
-        $_SESSION['error'] = "Failed to create sell details: " . $stmt->error;
+        $_SESSION['error'] = "Failed to create purchase: " . $stmt->error;
         header('location: ../add_new_sell.php');
         exit();
     }
 
-    // Data from POST for medicines
+    $stmt->close();
+
+    // Handle medicines and their quantities
     $medicineIds = $_POST['medicineName'];
     $quantities = $_POST['quantity'];
     $totalCosts = $_POST['totalCost'];
@@ -57,60 +70,61 @@ if (isset($_POST['sellBtn'])) {
             $quantity = $quantities[$index];
             $totalCost = $totalCosts[$index];
 
-            // Check if medicine stock exists
-            $stockSql = "SELECT quantity FROM medicine_stock WHERE medicine_id = ?";
-            $stockStmt = $db->prepare($stockSql);
-            $stockStmt->bind_param("i", $medicineId);
-            $stockStmt->execute();
-            $stockResult = $stockStmt->get_result();
+            // Check and update stock
+            $sql = "SELECT quantity FROM medicine_stock WHERE medicine_id = ?";
+            $stmt = $db->prepare($sql);
+            $stmt->bind_param("i", $medicineId);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-            if ($stockResult && $stockResult->num_rows > 0) {
-                $row = $stockResult->fetch_assoc();
+            if ($result && $result->num_rows > 0) {
+                $row = $result->fetch_assoc();
                 $currentQuantity = (int)$row['quantity'];
-
-                // Calculate new stock quantity
                 $newQuantity = $currentQuantity - (int)$quantity;
 
-                if ($newQuantity < 0) {
-                    echo "Insufficient stock for medicine ID: $medicineId<br>";
-                    continue;
-                }
-
-                // Insert into sell_quantity table
-                $sellQuantitySql = "
-                    INSERT INTO sell_quantity 
-                    (medicine_id, quantity, total_cost, sell_invoice) 
-                    VALUES (?, ?, ?, ?)
-                ";
-                $sellQuantityStmt = $db->prepare($sellQuantitySql);
-                $sellQuantityStmt->bind_param("iids", $medicineId, $quantity, $totalCost, $invoice_number);
-
-                if (!$sellQuantityStmt->execute()) {
-                    echo "Error inserting sell quantity for medicine ID: $medicineId. " . $sellQuantityStmt->error . "<br>";
-                    continue;
-                }
-
-                // Update medicine stock quantity
-                $updateStockSql = "UPDATE medicine_stock SET quantity = ? WHERE medicine_id = ?";
-                $updateStockStmt = $db->prepare($updateStockSql);
-                $updateStockStmt->bind_param("ii", $newQuantity, $medicineId);
-
-                if (!$updateStockStmt->execute()) {
-                    echo "Error updating stock for medicine ID: $medicineId. " . $updateStockStmt->error . "<br>";
-                }
-            } else {
-                echo "Medicine ID $medicineId not found in stock.<br>";
+                // Update stock
+                $updateSql = "UPDATE medicine_stock SET quantity = ? WHERE medicine_id = ?";
+                $stmt = $db->prepare($updateSql);
+                $stmt->bind_param("ii", $newQuantity, $medicineId);
+                $stmt->execute();
             }
+
+            // Insert into sell_quantity
+            $sellQuantitySql = "
+                INSERT INTO sell_quantity (medicine_id, quantity, total_cost, sell_invoice) 
+                VALUES (?, ?, ?, ?)
+            ";
+            $stmt = $db->prepare($sellQuantitySql);
+            $stmt->bind_param("iids", $medicineId, $quantity, $totalCost, $invoice_number);
+            $stmt->execute();
         }
 
-        $_SESSION['success'] = "Sell created successfully.";
+        $_SESSION['success'] = "Purchase created successfully.";
     } else {
         $_SESSION['error'] = "No medicine details provided.";
     }
 
-    // Redirect to the sell page
     header('location: ../add_new_sell.php');
     $db->close();
-    exit();
+}
+
+// Function to generate a unique invoice number
+function generateUniqueInvoiceNumber() {
+    global $db;
+
+    do {
+        $invoiceNumber = rand(10000000, 99999999); // Generate a random 6-digit number
+        $stmt = $db->prepare("SELECT EXISTS(SELECT 1 FROM sell_details WHERE invoice = ?)");
+        if (!$stmt) {
+            die("Database error: " . $db->error);
+        }
+        $stmt->bind_param("s", $invoiceNumber);
+        $stmt->execute();
+        $stmt->bind_result($exists);
+        $stmt->fetch();
+        $stmt->close();
+    } while ($exists);
+
+    return $invoiceNumber;
 }
 ?>

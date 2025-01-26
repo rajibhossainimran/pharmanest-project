@@ -107,6 +107,9 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
+                            <li class="nav-item"> <a href="return_page.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                        <p>Add Return</p>
+                                    </a> </li>
                                 <li class="nav-item"> <a href="./widgets/small-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Invoice Return List</p>
                                     </a> </li>
@@ -125,12 +128,6 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="./widgets/small-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                        <p>Stock Report</p>
-                                    </a> </li>
-                                <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                        <p>Stock Report (Batch Wise)</p>
-                                    </a> </li>
                                 <li class="nav-item"> <a href="medicine_stock.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                     <p>Available Stock</p>
                                     </a> </li>

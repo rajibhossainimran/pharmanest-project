@@ -8,8 +8,8 @@
 <?php include("./pages/common_pages/sidebar.php"); ?>
 <main class="app-main">
     <div class="container mt-2 mb-5 py-5">
-        <div class="d-flex justify-content-between">
-            <h2 class="">Purchase Details</h2>
+        <div class="">
+            <h2 class="text-center mb-4">Medicine Stock</h2>
         </div>
         <!-- display error message  -->
 
@@ -49,7 +49,7 @@
               <td>$supp_price</td>
               <td>$quantity</td>
               <td>
-                    <a href='view_purchase_details.php?id=$id' class='btn btn-info btn-sm text-white me-2' data-bs-toggle='tooltip' title='View'>
+                    <a href='view_stock_details.php?id=$id' class='btn btn-info btn-sm text-white me-2' data-bs-toggle='tooltip' title='View'>
                     <i class='bi bi-eye'></i>
                     </a>
                 </td>

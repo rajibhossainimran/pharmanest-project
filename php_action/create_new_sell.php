@@ -51,7 +51,7 @@ if (isset($_POST['sellBtn'])) {
         $due_amount, 
         $status
     );
-
+  
     if (!$stmt->execute()) {
         $_SESSION['error'] = "Failed to create purchase: " . $stmt->error;
         header('location: ../add_new_sell.php');
@@ -76,6 +76,7 @@ if (isset($_POST['sellBtn'])) {
             $stmt->bind_param("i", $medicineId);
             $stmt->execute();
             $result = $stmt->get_result();
+            $currentQuantit = (int)$row['quantity'];
 
             if ($result && $result->num_rows > 0) {
                 $row = $result->fetch_assoc();
@@ -88,7 +89,12 @@ if (isset($_POST['sellBtn'])) {
                 $stmt->bind_param("ii", $newQuantity, $medicineId);
                 $stmt->execute();
             }
-
+            $Cost_sql = "INSERT INTO total_sell (total_sell,date) VALUES('$total_amount',' $purchase_date')";
+            if (mysqli_query($db,  $Cost_sql)) {
+                echo "done";
+            } else {
+                echo "error";
+            }
             // Insert into sell_quantity
             $sellQuantitySql = "
                 INSERT INTO sell_quantity (medicine_id, quantity, total_cost, sell_invoice) 

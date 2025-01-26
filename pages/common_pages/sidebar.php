@@ -88,11 +88,15 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="./widgets/small-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                <li class="nav-item"> <a href="add_new_sell.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Add Invoice</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                        <p>Invoice List</p>
+                                <li class="nav-item"> <a href="purchase_list.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                        <p>Purchase Invoice List</p>
+                                    </a> </li>
+
+                                    <li class="nav-item"> <a href="sell_list.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                        <p>Sell Invoice List</p>
                                     </a> </li>
                             </ul>
                         </li>
@@ -127,7 +131,7 @@
                                 <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Stock Report (Batch Wise)</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                <li class="nav-item"> <a href="medicine_stock.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                     <p>Available Stock</p>
                                     </a> </li>
                             </ul>

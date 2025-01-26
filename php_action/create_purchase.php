@@ -120,6 +120,14 @@ if (isset($_POST['purchaseBtn'])) {
         } else {
             $_SESSION['error'] = "Failed to create purchase: " . mysqli_error($db);
         }
+
+           // insert total sell 
+           $sellCost_sql = "INSERT INTO total_purchase (total_cost,date) VALUES('$total_amount','$purchase_date')";
+           if (mysqli_query($db,  $sellCost_sql)) {
+               echo "done";
+           } else {
+               echo "error";
+           }
     } else {
         echo "No medicine details provided.<br>";
     }

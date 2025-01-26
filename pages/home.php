@@ -14,11 +14,19 @@
               <div class="media d-flex justify-content-around">
                 <div class="align-self-center">
                 <i class="bi bi-cash-coin text-info-emphasis fs-1"></i><br>
-                <a class="text-danger-emphasis" href="#">show details</a>
+                <a class="text-danger-emphasis" href="sell_list.php">show details</a>
                 </div>
                 <div class="media-body text-right">
+                <?php
+                            $amount =0;
+                            $selllist = $db->query("SELECT * FROM total_sell");
+                            while (list($_id, $singleSell,$date) = $selllist->fetch_row()) {
+                               $amount = $amount + (int)$singleSell;
+                               
+                            }
+                        ?>
                   <h5 class="fw-semibold">Total Sell</h5>
-                  <h6 class="text-info-emphasis fw-bold">$00.00</h6>
+                  <h6 class="text-info-emphasis fw-bold"><?php echo$amount;?> <span> taka</span></h6>
                 </div>
               </div>
             </div>
@@ -33,35 +41,26 @@
               <div class="media d-flex justify-content-around">
                 <div class="align-self-center">
                 <i class="bi bi-cash-coin text-info-emphasis fs-1"></i><br>
-                <a class="text-danger-emphasis" href="#">show details</a>
+                <a class="text-danger-emphasis" href="purchase_list.php">show details</a>
                 </div>
                 <div class="media-body text-right">
-                  <h5 class="fw-semibold">Total Cost</h5>
-                  <h6 class="text-info-emphasis fw-bold">$00.00</h6>
+                <?php
+                            $amount2 =0;
+                            $purchaselist = $db->query("SELECT * FROM total_purchase");
+                            while (list($_id, $singleSell,$date) =  $purchaselist->fetch_row()) {
+                               $amount2 = $amount2 + (int)$singleSell;
+                               
+                            }
+                        ?>
+                  <h5 class="fw-semibold">Total Purchase</h5>
+                  <h6 class="text-info-emphasis fw-bold"><?php echo$amount2;?> <span> taka</span></h6>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-xl-3 col-sm-6 col-12 mb-4">
-      <div class="card">
-          <div class="card-content">
-            <div class="card-body">
-              <div class="media d-flex justify-content-around">
-                <div class="align-self-center">
-                <i class="bi bi-cash-stack text-info-emphasis fs-1"></i><br>
-                <a class="text-danger-emphasis" href="#">show details</a>
-                </div>
-                <div class="media-body text-right">
-                  <h5 class="fw-semibold">Total Profit</h5>
-                  <h6 class="text-info-emphasis fw-bold">$00.00</h6>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
       <div class="col-xl-3 col-sm-6 col-12">
       <div class="card">
           <div class="card-content">
@@ -69,12 +68,25 @@
               <div class="media d-flex justify-content-around">
                 <div class="align-self-center">
                 <i class="bi bi-calendar3 text-info-emphasis fs-1"></i><br>
-                <a class="text-danger-emphasis" href="#">show details</a>
+                <a class="text-danger-emphasis" href="today_sell_list.php">show details</a>
                 </div>
                 <div class="media-body text-right">
+                  <?php 
+                  // Get today's date
+                  $today = date('Y-m-d');
+
+                  $todayAmount = 0;
+                  $selllist = $db->query("SELECT * FROM total_sell WHERE date = '$today'");
+
+                  while (list($_id, $singleSell, $date) = $selllist->fetch_row()) {
+                      $todayAmount += (int)$singleSell; 
+                  }
+                  ?>
                   <h5 class="fw-semibold">Today Sell</h5>
-                  <h6 class="text-info-emphasis fw-bold">$00.00</h6>
-                </div>
+                  <h6 class="text-info-emphasis fw-bold">
+                      <?php echo $todayAmount; ?> <span>taka</span>
+                  </h6>
+              </div>
               </div>
             </div>
           </div>
@@ -97,10 +109,22 @@
 
         </div>
         <div class="d-flex flex-column align-items-center justify-content-center">
-            <h4 class="fw-semibold ">Total Medicine</h4>
-            <h2 class="text-center ">55</h2>
-            <a class="text-primary" href="#">show details</a>
-        </div>
+          <?php 
+          // Query to count the total number of medicines
+          $result = $db->query("SELECT COUNT(*) AS total FROM medicines");
+
+          if ($result) {
+              $row = $result->fetch_assoc();
+              $totalMedicines = $row['total'];
+          } else {
+              $totalMedicines = 0;
+          }
+          ?>
+          <h4 class="fw-semibold">Total Medicine</h4>
+          <h2 class="text-center"><?php echo $totalMedicines; ?></h2>
+          <a class="text-primary" href="medicine_list.php">Show Details</a>
+      </div>
+
       </div>
 
       </div>
@@ -152,6 +176,24 @@
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-striped table-hover">
+                <?php 
+                  // Get today's date
+                  $today = date('Y-m-d');
+                  // today sell 
+                  $todayAmount2 = 0;
+                  $selllist = $db->query("SELECT * FROM total_sell WHERE date = '$today'");
+                  // today purchase 
+                  $todayPurchase = 0;
+                  $purchaselist = $db->query("SELECT * FROM total_purchase WHERE date = '$today'");
+
+                  while (list($_id, $singleSell, $date) =  $purchaselist->fetch_row()) {
+                    $todayPurchase += (int)$singleSell; 
+                  }
+
+                  while (list($_id, $singleSell, $date) =  $selllist->fetch_row()) {
+                    $todayAmount2 += (int)$singleSell; 
+                  }
+                  ?>
                     <thead class="table-success">
                         <tr>
                             <th>Today report</th>
@@ -161,15 +203,15 @@
                     <tbody>
                         <tr>
                             <td>Today Sell</td>
-                            <td>$500</td>
+                            <td><?php echo $todayAmount2;?><span> Taka</span></td>
                         </tr>
                         <tr>
                             <td>Purchase</td>
-                            <td>$300</td>
+                            <td><?php echo $todayPurchase;?><span> Taka</span></td>
                         </tr>
                         <tr>
                             <td>Cash Received</td>
-                            <td>$200</td>
+                            <td><?php echo $todayAmount2;?><span> Taka</span></td>
                         </tr>
                     </tbody>
                 </table>

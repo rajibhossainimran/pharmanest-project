@@ -1,10 +1,17 @@
-<?php
-// Include database configuration
-require_once './config/config.php';
+<?php include('check_user.php'); ?>
+<!-- database  -->
+<?php require_once './config/config.php'; ?>
+<!-- header part  -->
+<?php include("./pages/common_pages/header.php"); ?>
+<!--navber and sideber part start-->
+<?php include("./pages/common_pages/navber.php"); ?>
+<?php include("./pages/common_pages/sidebar.php"); ?>
 
+<?php
 // Initialize variables for start and end dates
 $start_date = $end_date = '';
 $sell_details = [];
+$total_amount_sum = 0; // Initialize sum variable
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate the input dates
     if (!empty($start_date) && !empty($end_date)) {
         // Query to fetch records between start_date and end_date
-        $sql = "SELECT * FROM sell_details WHERE sell_date BETWEEN ? AND ?";
+        $sql = "SELECT * FROM purchase_details WHERE purch_date BETWEEN ? AND ?";
         $stmt = $db->prepare($sql);
         $stmt->bind_param("ss", $start_date, $end_date);
         $stmt->execute();
@@ -24,26 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $sell_details[] = $row;
+                $total_amount_sum += $row['total_amount']; // Add to sum
             }
         } else {
-            $message = "No sales found for the selected date range.";
+            $message = "No purchases found for the selected date range.";
         }
     } else {
         $message = "Please select both start and end dates.";
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Details by Date</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-5">
-        <h2 class="text-center">Get Sales Details by Date Range</h2>
+
+<main class="app-main">
+<div class="container mt-5">
+        <h2 class="text-center">Get Purchase Details by Date Range</h2>
         
         <!-- Form to select date range -->
         <form method="POST" class="mt-4">
@@ -57,26 +58,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="date" class="form-control" id="end_date" name="end_date" value="<?= htmlspecialchars($end_date) ?>" required>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Get Sales</button>
+                    <button type="submit" class="btn btn-primary w-100">Get Purchase</button>
                 </div>
             </div>
         </form>
 
-        <!-- Display message if no sales found -->
+        <!-- Display message if no purchases found -->
         <?php if (isset($message)): ?>
             <div class="alert alert-info text-center"><?= $message ?></div>
         <?php endif; ?>
 
-        <!-- Display sales details -->
+        <!-- Display purchase details -->
         <?php if (!empty($sell_details)): ?>
             <table class="table table-bordered table-striped mt-4">
-                <thead class="table-dark">
+                <thead class="table-primary">
                     <tr>
                         <th>SL</th>
                         <th>Invoice</th>
-                        <th>Medicine Name</th>
+                        <th>Supplier ID</th>
                         <th>Total Price</th>
-                        <th>Sell Date</th>
+                        <th>Purchase Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,19 +85,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <tr>
                             <td><?= $index + 1 ?></td>
                             <td><?= htmlspecialchars($sell['invoice']) ?></td>
-                            <td><?= htmlspecialchars($sell['customer_name']) ?></td>
-              
-                            <td><?= htmlspecialchars($sell['total_amount']) ?></td>
-                            <td><?= htmlspecialchars($sell['sell_date']) ?></td>
+                            <td><?= htmlspecialchars($sell['supp_name']) ?></td>
+                            <td><?= number_format($sell['total_amount'], 2) ?></td>
+                            <td><?= htmlspecialchars($sell['purch_date']) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
+                <!-- Display total amount sum -->
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold">Total Purchase Amount:</td>
+                        <td class="fw-bold"><?= number_format($total_amount_sum, 2) ?></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         <?php endif; ?>
     </div>
-</body>
-</html>
+
+</main>
+<?php include("./pages/common_pages/footer.php"); ?>
 <?php
-// Close the database connection
 $db->close();
 ?>

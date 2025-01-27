@@ -28,7 +28,6 @@
             if ($user_result && mysqli_num_rows($user_result) > 0) {
                 $user = mysqli_fetch_assoc($user_result); // Fetch user data
     
-                // Store user data in session
                 $_SESSION['role'] = $role;
                 // $_SESSION['id'] = $user['id']; // Assuming your table has an 'id' column
                 

@@ -1,10 +1,18 @@
+<?php include('check_user.php'); ?>
+<!-- database  -->
+<?php require_once './config/config.php'; ?>
+<!-- header part  -->
+<?php include("./pages/common_pages/header.php"); ?>
+<!--navber and sideber part start-->
+<?php include("./pages/common_pages/navber.php"); ?>
+<?php include("./pages/common_pages/sidebar.php"); ?>
+
 <?php
-// Include database configuration
-require_once './config/config.php';
 
 // Initialize variables for start and end dates
 $start_date = $end_date = '';
 $sell_details = [];
+$total_amount_sum = 0; // Initialize variable to store the total amount
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $sell_details[] = $row;
+                $total_amount_sum += $row['total_amount']; // Add the total_amount to the sum
             }
         } else {
             $message = "No sales found for the selected date range.";
@@ -33,16 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Details by Date</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-5">
+
+<main class="app-main">
+<div class="container mt-5">
         <h2 class="text-center">Get Sales Details by Date Range</h2>
         
         <!-- Form to select date range -->
@@ -70,11 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Display sales details -->
         <?php if (!empty($sell_details)): ?>
             <table class="table table-bordered table-striped mt-4">
-                <thead class="table-dark">
+                <thead class="table-primary">
                     <tr>
                         <th>SL</th>
                         <th>Invoice</th>
-                        <th>Medicine Name</th>
+                        <th>Customer Name</th>
                         <th>Total Price</th>
                         <th>Sell Date</th>
                     </tr>
@@ -85,18 +87,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?= $index + 1 ?></td>
                             <td><?= htmlspecialchars($sell['invoice']) ?></td>
                             <td><?= htmlspecialchars($sell['customer_name']) ?></td>
-              
-                            <td><?= htmlspecialchars($sell['total_amount']) ?></td>
+                            <td><?= number_format($sell['total_amount'], 2) ?></td>
                             <td><?= htmlspecialchars($sell['sell_date']) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
+                <!-- Add footer row for total amount -->
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold">Total  Amount:</td>
+                        <td class="fw-bold"><?= number_format($total_amount_sum, 2) ?></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         <?php endif; ?>
     </div>
-</body>
-</html>
+
+</main>
+<?php include("./pages/common_pages/footer.php"); ?>
 <?php
-// Close the database connection
 $db->close();
 ?>

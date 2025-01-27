@@ -148,7 +148,7 @@ $result->close();
     
 </div>
 </div>
-<button class="btn btn-primary mx-auto text-center w-25" id="printAppMain"><i class="bi bi-printer"></i></button>
+<button class="btn btn-primary mx-auto text-center w-25" id="printAppMain"><i class="bi bi-printer">Print</i></button>
 
 <script>
   document.getElementById('printAppMain').addEventListener('click', function () {

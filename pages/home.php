@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xl-3 col-sm-6 col-12 mb-4"> 
+      <div class="col-xl-4 col-sm-6 col-12 mb-4"> 
         <div class="card">
           <div class="card-content">
             <div class="card-body">
@@ -33,7 +33,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xl-3 col-sm-6 col-12 mb-4">
+      <div class="col-xl-4 col-sm-6 col-12 mb-4">
       <div class="card">
       <i class=""></i>
           <div class="card-content">
@@ -61,7 +61,7 @@
         </div>
       </div>
 
-      <div class="col-xl-3 col-sm-6 col-12">
+      <div class="col-xl-4 col-sm-6 col-12">
       <div class="card">
           <div class="card-content">
             <div class="card-body">
@@ -140,9 +140,16 @@
 
         </div>
         <div class="d-flex flex-column align-items-center justify-content-center">
+          <?php 
+          $sql = "SELECT * FROM medicine_stock WHERE quantity = 0";
+          $result = $db->query($sql);
+          
+          // Get the number of rows (out-of-stock count)
+          $out_of_stock_count = $result->num_rows;
+          ?>
             <h4 class="fw-semibold ">Out of Stock</h4>
-            <h2 class="text-center ">00</h2>
-            <a class="text-primary" href="#">show details</a>
+            <h2 class="text-center "><?= $out_of_stock_count; ?></h2>
+            <a class="text-primary" href="stock_out_medicines.php">show details</a>
         </div>
       </div>
       </div>
@@ -157,9 +164,20 @@
 
         </div>
         <div class="d-flex flex-column align-items-center justify-content-center">
+        <?php 
+          // Query to count the total number of medicines
+          $result = $db->query("SELECT COUNT(*) AS total FROM expired_medicines");
+
+          if ($result) {
+              $row = $result->fetch_assoc();
+              $totalMedicines3 = $row['total'];
+          } else {
+              $totalMedicines3 = 0;
+          }
+          ?>
             <h4 class="fw-semibold ">Expired Medicine</h4>
-            <h2 class="text-center ">00</h2>
-            <a class="text-primary" href="#">show details</a>
+            <h2 class="text-center "><?php echo $totalMedicines3; ?></h2>
+            <a class="text-primary" href="expired_medicines.php">show details</a>
         </div>
       </div>
 

@@ -150,19 +150,11 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="./widgets/small-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                        <p>User Report</p>
-                                    </a> </li>
-                                <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                        <p>User Wise sale Report</p>
-                                    </a> </li>
-                              <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                        <p>Product Wise Sales Report</p>
-                                    </a> </li>
-                                    <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                        <p>Category Wise Sales Report</p>
+  
+                                    <li class="nav-item"> <a href="sale_report.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                        <p>Sale Report</p>
                                     </a> </li> 
-                                    <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                    <li class="nav-item"> <a href="purchase_report.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Purchase Report</p>
                                     </a> </li> 
                             </ul>

@@ -27,9 +27,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- Main Part Start -->
 <main class="app-main">
     <div class="container mt-5">
+        <div class="row my-5">
+        <div class="col-4"></div>
+         <div class="col-4">
+            <a href="return_invoice_list.php" class="btn btn-success d-block my-2" role="button">
+        View Sell List
+        </a>
+            </div>
+            <div class="col-4"></div>
+        </div>
         <div class="row g-4">
+        <?php
+        if (isset($_SESSION['success'])) {
+            echo "<p id='message' style='color: yellow;font-size: 30px;background-color: lightgreen; text-align: center; padding-left: 20px; padding-right: 20px; margin-left: 10px; margin-right: 10px;'>" . htmlspecialchars($_SESSION['success']) . "</p>";
+            unset($_SESSION['success']); // Clear the message after displaying it
+        }
+        
+        if (isset($_SESSION['error'])) {
+            echo "<p id='message' style='color: red;font-size: 30px;background-color: lightred; text-align: center; padding-left: 20px; padding-right: 20px; margin-left: 10px; margin-right: 10px;'>" . htmlspecialchars($_SESSION['error']) . "</p>";
+            unset($_SESSION['error']); // Clear the message after displaying it
+        }
+        ?>
             <!-- Return From Customer -->
-            <div class="col-md-6">
+             <div class="col-md-2"></div>
+            <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Return From Customer</h5>
@@ -44,22 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
+            <div class="col-md-2"></div>
 
-            <!-- Return To Manufacturer -->
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title mb-4">Return To Supplier</h5>
-                        <form>
-                            <div class="mb-3">
-                                <label for="purchaseId" class="form-label ms-5 ps-5">Purchase invoice <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="purchaseId" placeholder="Purchase Id" required>
-                            </div>
-                            <button type="submit" class="btn btn-success">Search</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 </main>

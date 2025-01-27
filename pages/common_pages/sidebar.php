@@ -110,15 +110,10 @@
                             <li class="nav-item"> <a href="return_page.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Add Return</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./widgets/small-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
+                                <li class="nav-item"> <a href="return_invoice_list.php" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
                                         <p>Invoice Return List</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                        <p>Supplier Return List</p>
-                                    </a> </li>
-                                <li class="nav-item"> <a href="./widgets/info-box.html" class="nav-link"><i class="bi bi-arrow-right-short ms-3"></i>
-                                    <p>Wastage Return List</p>
-                                    </a> </li>
+                               
                             </ul>
                         </li>
                         <li class="nav-item"> <a href="#" class="nav-link"> <i class="bi bi-shop fs-4"></i>

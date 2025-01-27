@@ -69,11 +69,16 @@ if ($purchase_list->num_rows > 0) {
     $counter = 1;
     while (list($id, $invoice, $supp_name, $purchase_date, $Total_amount, $discount, $receive_amount, $due_amount, $status) = $purchase_list->fetch_row()) {
 
-        // Get supplier name from supplier_add table
-        $sql = "SELECT supplier_name FROM supplier_add WHERE id = $supp_name";
+        $sql = "SELECT * FROM supplier_add WHERE id = $supp_name";
         $rowSupplier = $db->query($sql);
-        $getSupplier = $rowSupplier->fetch_assoc();
-        $supplier_name = $getSupplier['supplier_name'];
+        
+        if ($rowSupplier->num_rows > 0) {
+            $getSupplier = $rowSupplier->fetch_assoc();
+            $supplier_name = $getSupplier['supplier_name'];
+        } else {
+            
+            $supplier_name = 'Unknown';  
+        }
 
         if ($status == 0) {
             $purchase_status = "<span class='badge bg-success'>Paid</span>";

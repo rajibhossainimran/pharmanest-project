@@ -69,6 +69,7 @@ $result->close();
         </a>
             </div>
     </div>
+<div class="app_mainx">
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12 d-flex justify-content-center">
@@ -156,6 +157,19 @@ $result->close();
     </div>
     
 </div>
+</div>
+<button class="btn btn-primary mx-auto text-center w-25" id="printAppMain"><i class="bi bi-printer"></i></button>
+
+<script>
+  document.getElementById('printAppMain').addEventListener('click', function () {
+    const appMainContent = document.querySelector('.app_mainx').innerHTML;
+    const originalContent = document.body.innerHTML;
+    document.body.innerHTML = appMainContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload();
+  });
+</script>
 </main>
 
 <?php include("./pages/common_pages/footer.php"); ?>

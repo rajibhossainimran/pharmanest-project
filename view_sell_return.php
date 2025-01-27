@@ -4,6 +4,7 @@
 <?php require_once './config/config.php'; ?>
 <!-- header part  -->
 <?php include("./pages/common_pages/header.php"); ?>
+<!--navber and sideber part start-->
 <?php include("./pages/common_pages/navber.php"); ?>
 <?php include("./pages/common_pages/sidebar.php");?>
 
@@ -12,7 +13,7 @@
 
 $id = intval($_GET['id']); 
 
-$purchaseDetailSql = "SELECT * FROM sell_details WHERE id = $id";
+$purchaseDetailSql = "SELECT * FROM return_invoice_details WHERE id = $id";
 
 $result = $db->query($purchaseDetailSql);
 
@@ -54,15 +55,18 @@ $result->close();
 
 
 <main class="app-main">
-<div class="d-flex justify-content-between mt-3 mx-5 ">
-            <h2 class="">Sells Details</h2>
-            <div>
-                <a href="add_new_sell.php" class="btn btn-success d-block my-2" role="button">
-                    Add New Sell
-                </a>
+     <div class="d-flex justify-content-around">
+           <div>
+            <a href="return_page.php" class="btn btn-success d-block my-2" role="button">
+        Add Return
+        </a>
             </div>
-        </div>
-<div class="app_mainx">
+            <div>
+            <a href="return_invoice_list.php" class="btn btn-success d-block my-2" role="button">
+        View Sell List
+        </a>
+            </div>
+    </div>
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12 d-flex justify-content-center">
@@ -103,7 +107,7 @@ $result->close();
         <!-- displaying purchase list medicine table  -->
             <?php
                     
-                    $purchase_list = $db->query("SELECT * FROM sell_quantity WHERE sell_invoice = $invoice");
+                    $purchase_list = $db->query("SELECT * FROM return_invoice_quantity WHERE sell_invoice = $invoice");
                     if($purchase_list->num_rows > 0){
                       $counter = 1;
                       while (list($id,$medicine_id,$quantity,$total_cost,$sell_invoice) = $purchase_list->fetch_row()) {
@@ -143,24 +147,10 @@ $result->close();
 
     <div class="row mt-0">
         <div class="col-md-6"></div>
-        <div class="col-md-6 text-end px-5"> <table class="table table-bordered"> <tbody> <tr> <th>Sub Total</th> <td><?php echo $total_amount;?></td> </tr> <tr> <th>Discount</th> <td><?php echo $discount;?>%</td> </tr> <tr> <th>Receive Amount</th> <td><?php echo $receive_amount;?></td> </tr> <tr> <th>Due Amount</th> <td><?php echo $due_amount;?></td> </tr> </tbody> </table> </div>
+        <div class="col-md-6 text-end px-5"> <table class="table table-bordered"> <tbody> <tr> <th>Sub Total</th> <td><?php echo $total_amount;?></td> </tr> <tr> <th>Discount</th> <td><?php echo $discount;?>%</td> </tr> <tr> <th>Retrun Amount</th> <td><?php echo $receive_amount;?></td> </tr> <tr> <th>Due Amount</th> <td><?php echo $due_amount;?></td> </tr> </tbody> </table> </div>
     </div>
     
 </div>
-</div>
-<button class="btn btn-primary mx-auto text-center w-25" id="printAppMain"><i class="bi bi-printer"></i></button>
-
-<script>
-  document.getElementById('printAppMain').addEventListener('click', function () {
-    // Get the app-main content
-    const appMainContent = document.querySelector('.app_mainx').innerHTML;
-    const originalContent = document.body.innerHTML;
-    document.body.innerHTML = appMainContent;
-    window.print();
-    document.body.innerHTML = originalContent;
-    window.location.reload();
-  });
-</script>
 </main>
 
 <?php include("./pages/common_pages/footer.php"); ?>
